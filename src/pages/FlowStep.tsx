@@ -10,6 +10,7 @@ import HookBlock from '../components/HookBlock';
 import RelatedPosts from '../components/RelatedPosts';
 import { useFlowData } from '../hooks/useFlowData';
 import { usePrefetchNext } from '../hooks/usePrefetchNext';
+import { getSeoDescription } from '../utils/seoFallback';
 
 export default function FlowStep() {
   const { slug } = useParams<{ slug: string }>();
@@ -26,11 +27,13 @@ export default function FlowStep() {
   const currentUrl = typeof window !== 'undefined' ? window.location.href : '';
   const domain = typeof window !== 'undefined' ? window.location.origin : 'https://dallaport.com';
 
+  const metaDescription = getSeoDescription(data.seoDescription, data.shortDescription, data.content);
+
   return (
     <article className="max-w-3xl mx-auto py-8 px-4">
       <Helmet>
         <title>{data.title} | 딸라포트</title>
-        <meta name="description" content={data.summary} />
+        <meta name="description" content={metaDescription} />
         <link rel="alternate" hrefLang="ko" href={`${domain}/post/${actualSlug}`} />
         <link rel="alternate" hrefLang="en" href={`${domain}/en/post/${actualSlug}`} />
         <link rel="canonical" href={`${domain}/post/${actualSlug}`} />
@@ -40,7 +43,7 @@ export default function FlowStep() {
             "@context": "https://schema.org",
             "@type": "Article",
             "headline": data.title,
-            "description": data.summary,
+            "description": metaDescription,
             "author": {
               "@type": "Organization",
               "name": "딸라포트"
@@ -60,7 +63,7 @@ export default function FlowStep() {
       <AdSlot position="top" />
 
       <p className="text-xl text-gray-600 mb-8 font-medium leading-relaxed">
-        {data.summary}
+        {data.shortDescription || data.summary}
       </p>
 
       <div className="prose prose-lg prose-blue max-w-none my-10">

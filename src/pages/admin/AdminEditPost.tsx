@@ -28,6 +28,8 @@ export default function AdminEditPost() {
             content: data.contentHtml || '',
             seoTitle: data.seoTitle || '',
             seoDescription: data.seoDescription || '',
+            shortDescription: data.shortDescription || '',
+            publishDate: data.publishDate || '',
             tags: data.tags || '',
           });
         } else {
@@ -54,6 +56,8 @@ export default function AdminEditPost() {
         contentHtml: data.content,
         seoTitle: data.seoTitle,
         seoDescription: data.seoDescription,
+        shortDescription: data.shortDescription,
+        publishDate: data.publishDate,
         track: data.category,
       });
       alert('수정되었습니다.');
@@ -71,7 +75,7 @@ export default function AdminEditPost() {
   return (
     <div className="max-w-7xl mx-auto py-8 px-4">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Edit Post</h1>
+        <h1 className="text-2xl font-bold text-gray-900">글 수정</h1>
       </div>
       <PostEditor initialData={postData} onSave={handleSave} />
       <div className="mt-8 text-center text-xs text-gray-400">

@@ -10,6 +10,8 @@ export interface PostData {
   contentHtml: string;
   seoTitle: string;
   seoDescription: string;
+  shortDescription?: string;
+  publishDate?: string;
   track?: string;
   views?: number;
   ctr?: number;

@@ -7,11 +7,22 @@ interface CleanHtmlButtonProps {
 
 export default function CleanHtmlButton({ content, onClean }: CleanHtmlButtonProps) {
   const handleClean = () => {
-    // 실제 구현에서는 DOMPurify 등을 사용하여 불필요한 태그, 인라인 스타일 등을 제거
-    // 여기서는 간단히 빈 줄 정리 예시
-    const cleaned = content.replace(/\n\s*\n/g, '\n\n').trim();
+    let cleaned = content
+      .replace(/\[cite:.*?\]/g, '') // Remove [cite: ...]
+      .replace(/```html/g, '') // Remove markdown code wrappers
+      .replace(/```/g, '')
+      .replace(/\n\s*\n/g, '\n\n')
+      .trim();
+
+    // 효능, 치료, 개선, 질병 단정 표현이 들어가면 안전 표현으로 자동 치환
+    cleaned = cleaned
+      .replace(/치료/g, '관리')
+      .replace(/완치/g, '도움')
+      .replace(/개선/g, '유지')
+      .replace(/효능/g, '특성');
+
     onClean(cleaned);
-    alert('HTML/Markdown 정리가 완료되었습니다.');
+    alert('HTML/Markdown 정리 및 금칙어 치환이 완료되었습니다.');
   };
 
   return (

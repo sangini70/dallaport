@@ -1,13 +1,19 @@
-import { Outlet, Link, useLocation } from 'react-router-dom';
+import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 
 export default function AdminLayout() {
   const location = useLocation();
+  const navigate = useNavigate();
   
   const navItems = [
     { path: '/admin/dashboard', label: 'Dashboard' },
     { path: '/admin/posts', label: 'Posts' },
     { path: '/admin/settings', label: 'Settings' },
   ];
+
+  const handleLogout = () => {
+    sessionStorage.removeItem('admin_authenticated');
+    navigate('/admin/login');
+  };
 
   return (
     <div className="min-h-screen flex flex-col bg-slate-50">
@@ -38,7 +44,7 @@ export default function AdminLayout() {
           </nav>
         </div>
         <div className="flex items-center">
-          <button className="text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors">
+          <button onClick={handleLogout} className="text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors">
             Logout
           </button>
         </div>

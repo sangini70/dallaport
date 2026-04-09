@@ -16,6 +16,7 @@ import AdminEditPost from './pages/admin/AdminEditPost';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import AdminIndexing from './pages/admin/AdminIndexing';
 import AdminSettings from './pages/admin/AdminSettings';
+import AdminLogin from './pages/admin/AdminLogin';
 import ProtectedAdminRoute from './components/admin/ProtectedAdminRoute';
 
 export const router = createBrowserRouter([
@@ -32,6 +33,10 @@ export const router = createBrowserRouter([
       { path: 'en/search', element: <EnSearch /> },
       { path: 'en/post/:slug', element: <EnFlowStep /> },
     ],
+  },
+  {
+    path: '/admin/login',
+    element: <AdminLogin />,
   },
   {
     path: '/admin',
