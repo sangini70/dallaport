@@ -160,7 +160,7 @@ export default function AdminPosts() {
             {posts.length === 0 ? (
               <tr>
                 <td colSpan={6} className="px-4 py-8 text-center text-gray-500">
-                  No posts found.
+                  데이터 없음
                 </td>
               </tr>
             ) : (

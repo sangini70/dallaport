@@ -10,7 +10,7 @@ export default function CtrList({ posts }: Props) {
       </div>
       <div className="divide-y divide-gray-100">
         {posts.length === 0 ? (
-          <div className="p-4 text-center text-gray-500">No data available</div>
+          <div className="p-4 text-center text-gray-500">데이터 없음</div>
         ) : (
           posts.map((post) => (
             <div key={post.slug} className="p-4 flex items-center justify-between hover:bg-gray-50 transition-colors">

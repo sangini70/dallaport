@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import DashboardSummaryCards from '../../components/admin/DashboardSummaryCards';
-import ViewsChart from '../../components/admin/ViewsChart';
 import TopPostsList from '../../components/admin/TopPostsList';
 import CtrList from '../../components/admin/CtrList';
 import { fetchDashboardMetrics, DashboardMetrics } from '../../services/dashboardMetrics';
@@ -27,10 +26,8 @@ export default function AdminDashboard() {
       </div>
 
       <DashboardSummaryCards totalViews={metrics.totalViews} averageCtr={metrics.averageCtr} />
-      
-      <ViewsChart />
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8 mt-8">
         <TopPostsList posts={metrics.topPosts} />
         <CtrList posts={metrics.lowCtrPosts} />
       </div>

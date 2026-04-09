@@ -29,9 +29,8 @@ export async function fetchDashboardMetrics(language: string = 'ko'): Promise<Da
         const detailRes = await fetch(`/data/${language}/detail/${slug}.json`);
         if (detailRes.ok) {
           const post = await detailRes.json();
-          // Assuming views and ctr are stored in JSON, or we mock them if not present
-          const views = post.views || Math.floor(Math.random() * 10000);
-          const ctr = post.ctr || (Math.random() * 5);
+          const views = post.views || 0;
+          const ctr = post.ctr || 0;
           
           posts.push({ ...post, views, ctr });
           totalViews += views;

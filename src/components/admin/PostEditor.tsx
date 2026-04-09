@@ -172,6 +172,7 @@ export default function PostEditor({ initialData, onSave }: PostEditorProps) {
                   <option value="dollar">달러 (Dollar)</option>
                   <option value="interest-rate">금리 (Interest Rate)</option>
                   <option value="etf">ETF</option>
+                  <option value="economy-basics">경제 기초 (Economy Basics)</option>
                 </select>
               </div>
               <div>

@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
-import { auth } from '../../lib/firebase';
+import { doc, getDoc } from 'firebase/firestore';
+import { auth, db } from '../../lib/firebase';
 
 export default function AdminLogin() {
   const [step, setStep] = useState(1);
@@ -10,29 +11,47 @@ export default function AdminLogin() {
   const navigate = useNavigate();
 
   const handleGoogleLogin = async () => {
+    console.log('[AdminLogin] popup 시작');
     try {
       const provider = new GoogleAuthProvider();
       const result = await signInWithPopup(auth, provider);
+      console.log('[AdminLogin] popup 성공', result.user.email);
       
-      // In a real app, verify if result.user.email is in the allowed list
-      if (result.user) {
+      if (result.user && result.user.email === 'luganopizza@gmail.com') {
         setStep(2);
         setError('');
+      } else {
+        setError('허용되지 않은 관리자 이메일입니다.');
+        auth.signOut();
       }
     } catch (err: any) {
-      console.error(err);
-      setError('구글 로그인에 실패했습니다. 권한을 확인해주세요.');
+      console.error('[AdminLogin] popup 에러:', err.code, err.message);
+      setError(`구글 로그인에 실패했습니다: ${err.message || '알 수 없는 오류'}`);
     }
   };
 
-  const handlePasswordSubmit = (e: React.FormEvent) => {
+  const handlePasswordSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // In a real app, verify password against a secure backend
-    if (password === 'admin123') { // Mock password for UI demonstration
-      sessionStorage.setItem('admin_authenticated', 'true');
-      navigate('/admin/dashboard');
-    } else {
-      setError('비밀번호가 일치하지 않습니다.');
+    try {
+      const docRef = doc(db, 'settings', 'security');
+      const docSnap = await getDoc(docRef);
+      
+      let validPassword = 'admin123'; // Fallback for initial setup if doc doesn't exist
+      if (docSnap.exists() && docSnap.data().adminPassword) {
+        validPassword = docSnap.data().adminPassword;
+      }
+
+      if (password === validPassword) {
+        console.log('[AdminLogin] sessionStorage 저장');
+        sessionStorage.setItem('admin_authenticated', 'true');
+        console.log('[AdminLogin] redirect 실행');
+        navigate('/admin/dashboard', { replace: true });
+      } else {
+        setError('비밀번호가 일치하지 않습니다.');
+      }
+    } catch (err) {
+      console.error('Error checking password:', err);
+      setError('비밀번호 확인 중 오류가 발생했습니다.');
     }
   };
 
@@ -58,6 +77,7 @@ export default function AdminLogin() {
                 1단계: 허용된 구글 계정으로 로그인해주세요.
               </p>
               <button
+                type="button"
                 onClick={handleGoogleLogin}
                 className="w-full flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
               >
