@@ -1,0 +1,9 @@
+{
+  "slug": "exchange-rate/intro",
+  "track": "exchange-rate",
+  "title": "What is an Exchange Rate?",
+  "summary": "Learn the basic concepts and principles of exchange rates.",
+  "content": "## Definition of Exchange Rate\n\nAn exchange rate is the rate at which one currency will be exchanged for another. For example, if you need 1,300 KRW to buy 1 USD, the USD/KRW exchange rate is 1,300.\n\n## What happens when the exchange rate rises?\n\nWhen the exchange rate rises, it means the value of the dollar increases and the value of the won decreases. This is called 'won depreciation'.\n\n- Exporting companies: Advantageous (they get more won for the same amount of dollars earned)\n- Importing companies: Disadvantageous (it costs more won to buy the same goods)\n- Overseas travelers: Disadvantageous (travel expenses increase)",
+  "next_slug": "exchange-rate/factors",
+  "hub_slug": "flow-map"
+}

@@ -1,0 +1,16 @@
+{
+  "items": [
+    {
+      "slug": "exchange-rate/intro",
+      "track": "exchange-rate",
+      "title": "What is an Exchange Rate?",
+      "summary": "Learn the basic concepts and principles of exchange rates."
+    },
+    {
+      "slug": "dollar/intro",
+      "track": "dollar",
+      "title": "History of Dollar Hegemony",
+      "summary": "Discover how the US dollar became the world's reserve currency."
+    }
+  ]
+}

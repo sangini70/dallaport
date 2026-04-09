@@ -1,0 +1,16 @@
+{
+  "slug": "exchange-rate-market-impact",
+  "track": "exchange-rate",
+  "step": 3,
+  "prev_slug": "exchange-rate-and-interest-rate",
+  "next_slug": "exchange-rate-investment-strategy",
+  "related": [
+    "exchange-rate-basics",
+    "exchange-rate-and-interest-rate",
+    "exchange-rate-investment-strategy"
+  ],
+  "title": "고환율 시대, 시장의 움직임",
+  "hook": "환율 1,400원 돌파, 지금 주식을 사야 할까요, 팔아야 할까요?",
+  "summary": "고환율 시대, 주식 시장과 부동산 시장은 어떻게 움직이는가?",
+  "content": "## 주식 시장\n\n고환율은 외국인 투자자들의 자금 이탈을 부추길 수 있어 증시에 부정적인 영향을 미칠 수 있습니다. 이는 앞서 [환율과 금리의 상관관계](/post/exchange-rate-and-interest-rate)에서 살펴본 자본 이동의 결과입니다.\n\n## 부동산 시장\n\n환율 상승은 수입 물가 상승으로 이어져 인플레이션을 유발하고, 이는 금리 인상 압박으로 작용하여 부동산 시장에 부담을 줍니다. 시장의 흐름을 읽었다면 이제 [투자 전략](/post/exchange-rate-investment-strategy)을 고민할 때입니다."
+}

@@ -1,0 +1,16 @@
+{
+  "items": [
+    {
+      "slug": "exchange-rate/intro",
+      "track": "exchange-rate",
+      "title": "환율이란 무엇인가?",
+      "summary": "환율의 기본 개념과 결정 원리를 알아봅니다."
+    },
+    {
+      "slug": "dollar/intro",
+      "track": "dollar",
+      "title": "달러 패권의 역사",
+      "summary": "기축통화 달러가 어떻게 세계 경제를 지배하게 되었는지 알아봅니다."
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "slug": "exchange-rate-and-interest-rate",
+  "track": "exchange-rate",
+  "step": 2,
+  "prev_slug": "exchange-rate-basics",
+  "next_slug": "exchange-rate-market-impact",
+  "related": [
+    "exchange-rate-basics",
+    "exchange-rate-market-impact",
+    "exchange-rate-investment-strategy"
+  ],
+  "title": "환율과 금리의 상관관계 (EN)",
+  "hook": "미국이 금리를 올리면 왜 우리나라 환율이 요동칠까요? 그 비밀을 풀어봅니다. (EN)",
+  "summary": "미국 연준 금리 인상이 미치는 영향과 환율의 관계. (EN)",
+  "content": "## 금리와 환율\n\n금리가 높은 나라의 통화 가치는 오르는 경향이 있습니다. 투자자들이 더 높은 이자를 받기 위해 그 나라의 돈을 사려고 하기 때문입니다. [환율의 기초](/en/post/exchange-rate-basics)에서 배운 것처럼 돈의 가치는 상대적입니다.\n\n## 미국의 금리 인상\n\n미국이 금리를 올리면 달러의 가치가 상승합니다. 이는 곧 원/달러 환율의 상승(원화 가치 하락)으로 이어집니다. 이러한 금리 변화는 [환율 변동성을 활용한 투자 전략](/en/post/exchange-rate-investment-strategy)을 세우는 데 핵심적인 지표가 됩니다. (EN)"
+}

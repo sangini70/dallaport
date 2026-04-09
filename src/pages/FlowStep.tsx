@@ -1,0 +1,89 @@
+import { useParams } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
+import ReactMarkdown from 'react-markdown';
+import Breadcrumb from '../components/Breadcrumb';
+import ShareButtons from '../components/ShareButtons';
+import AdSlot from '../components/AdSlot';
+import NextStep from '../components/NextStep';
+import CurrencyCalculator from '../components/CurrencyCalculator';
+import HookBlock from '../components/HookBlock';
+import RelatedPosts from '../components/RelatedPosts';
+import { useFlowData } from '../hooks/useFlowData';
+import { usePrefetchNext } from '../hooks/usePrefetchNext';
+
+export default function FlowStep() {
+  const { slug } = useParams<{ slug: string }>();
+  // Fallback for older routes if needed, but we'll assume standard slug
+  const actualSlug = slug || 'exchange-rate-basics';
+  
+  const { data, loading, error } = useFlowData(actualSlug);
+
+  usePrefetchNext(data?.next_slug);
+
+  if (loading) return <div className="py-20 text-center text-gray-500">콘텐츠를 불러오는 중입니다...</div>;
+  if (error || !data) return <div className="py-20 text-center text-red-500">콘텐츠를 찾을 수 없습니다.</div>;
+
+  const currentUrl = typeof window !== 'undefined' ? window.location.href : '';
+  const domain = typeof window !== 'undefined' ? window.location.origin : 'https://dallaport.com';
+
+  return (
+    <article className="max-w-3xl mx-auto py-8 px-4">
+      <Helmet>
+        <title>{data.title} | 딸라포트</title>
+        <meta name="description" content={data.summary} />
+        <link rel="alternate" hrefLang="ko" href={`${domain}/post/${actualSlug}`} />
+        <link rel="alternate" hrefLang="en" href={`${domain}/en/post/${actualSlug}`} />
+        <link rel="canonical" href={`${domain}/post/${actualSlug}`} />
+        {/* JSON-LD for SEO */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Article",
+            "headline": data.title,
+            "description": data.summary,
+            "author": {
+              "@type": "Organization",
+              "name": "딸라포트"
+            }
+          })}
+        </script>
+      </Helmet>
+
+      <Breadcrumb track={data.track} title={data.title} />
+
+      <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 mt-6 mb-4 leading-tight">
+        {data.title}
+      </h1>
+      
+      <HookBlock hook={(data as any).hook} />
+
+      <AdSlot position="top" />
+
+      <p className="text-xl text-gray-600 mb-8 font-medium leading-relaxed">
+        {data.summary}
+      </p>
+
+      <div className="prose prose-lg prose-blue max-w-none my-10">
+        <ReactMarkdown>{data.content}</ReactMarkdown>
+      </div>
+
+      <AdSlot position="middle" />
+
+      {/* 환율 관련 트랙일 경우 계산기 노출 (예시 로직) */}
+      {data.track === 'exchange-rate' && <CurrencyCalculator />}
+
+      <ShareButtons url={currentUrl} title={data.title} />
+
+      <AdSlot position="bottom" />
+
+      <NextStep 
+        nextSlug={data.next_slug} 
+        prevSlug={data.prev_slug} 
+        currentSlug={actualSlug}
+        track={data.track}
+      />
+
+      <RelatedPosts relatedSlugs={data.related} />
+    </article>
+  );
+}

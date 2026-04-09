@@ -1,0 +1,16 @@
+{
+  "slug": "exchange-rate-basics",
+  "track": "exchange-rate",
+  "step": 1,
+  "prev_slug": null,
+  "next_slug": "exchange-rate-and-interest-rate",
+  "related": [
+    "exchange-rate-and-interest-rate",
+    "exchange-rate-market-impact",
+    "exchange-rate-investment-strategy"
+  ],
+  "title": "환율이란 무엇인가? (EN)",
+  "hook": "환율이 올랐다는 뉴스가 내 월급과 무슨 상관이 있을까요? (EN)",
+  "summary": "환율의 기본 개념과 결정 원리를 알아봅니다. (EN)",
+  "content": "## 환율의 정의\n\n환율은 두 나라 돈의 교환 비율입니다. 예를 들어 1달러를 사기 위해 1,300원이 필요하다면, 원/달러 환율은 1,300원입니다.\n\n## 환율이 오르면?\n\n환율이 오른다는 것은 달러의 가치가 높아지고 원화의 가치가 떨어지는 것을 의미합니다. 이를 '원화 약세'라고 부릅니다. 환율 변동은 [금리와의 상관관계](/en/post/exchange-rate-and-interest-rate)를 이해하는 것이 중요합니다.\n\n- 수출 기업: 유리함 (같은 달러를 벌어도 원화로 환산하면 더 많음)\n- 수입 기업: 불리함 (같은 물건을 사도 원화가 더 많이 듦)\n- 해외 여행객: 불리함 (여행 경비 증가)\n\n이러한 현상은 [시장 전반에 큰 영향](/en/post/exchange-rate-market-impact)을 미치게 됩니다. (EN)"
+}

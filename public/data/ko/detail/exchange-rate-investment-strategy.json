@@ -1,0 +1,16 @@
+{
+  "slug": "exchange-rate-investment-strategy",
+  "track": "exchange-rate",
+  "step": 4,
+  "prev_slug": "exchange-rate-market-impact",
+  "next_slug": null,
+  "related": [
+    "exchange-rate-basics",
+    "exchange-rate-and-interest-rate",
+    "exchange-rate-market-impact"
+  ],
+  "title": "환율 변동성을 활용한 투자 전략",
+  "hook": "위기를 기회로 바꾸는 실전 달러 투자법, 지금 바로 시작할 수 있습니다.",
+  "summary": "달러 ETF 및 환노출/환헤지 투자 전략.",
+  "content": "## 달러 투자\n\n환율 상승이 예상될 때는 달러 예금이나 달러 ETF에 투자하여 수익을 낼 수 있습니다. [고환율 시대의 시장 움직임](/post/exchange-rate-market-impact)을 파악하는 것이 우선입니다.\n\n## 환노출 vs 환헤지\n\n해외 주식이나 ETF에 투자할 때, 환율 변동에 노출시킬 것인지(환노출, UH), 환율 변동의 영향을 없앨 것인지(환헤지, H) 선택해야 합니다. [환율의 기초](/post/exchange-rate-basics)를 탄탄히 다졌다면 본인에게 맞는 전략을 선택할 수 있습니다."
+}

@@ -1,0 +1,86 @@
+import { useState, useEffect } from 'react';
+import { Helmet } from 'react-helmet-async';
+import { Link } from 'react-router-dom';
+import { Search as SearchIcon } from 'lucide-react';
+import { fetchSearchIndex } from '../services/publicData';
+
+interface SearchResult {
+  slug: string;
+  title: string;
+  summary: string;
+  track: string;
+}
+
+export default function EnSearch() {
+  const [query, setQuery] = useState('');
+  const [results, setResults] = useState<SearchResult[]>([]);
+  const [allData, setAllData] = useState<SearchResult[]>([]);
+
+  useEffect(() => {
+    fetchSearchIndex('en')
+      .then(data => setAllData(data.items || []))
+      .catch(err => console.error('Failed to load search index', err));
+  }, []);
+
+  useEffect(() => {
+    if (!query.trim()) {
+      setResults([]);
+      return;
+    }
+    const lowerQuery = query.toLowerCase();
+    const filtered = allData.filter(item => 
+      item.title.toLowerCase().includes(lowerQuery) || 
+      item.summary.toLowerCase().includes(lowerQuery)
+    );
+    setResults(filtered);
+  }, [query, allData]);
+
+  return (
+    <div className="max-w-3xl mx-auto py-8">
+      <Helmet>
+        <title>Search | dallaport</title>
+      </Helmet>
+
+      <h1 className="text-3xl font-bold mb-8">What are you looking for?</h1>
+
+      <div className="relative mb-8">
+        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+          <SearchIcon className="h-6 w-6 text-gray-400" />
+        </div>
+        <input
+          type="text"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Search exchange rates, interest rates, dollar, etc."
+          className="w-full pl-12 pr-4 py-4 text-lg border-2 border-gray-200 rounded-2xl focus:border-blue-500 focus:ring-0 outline-none transition-colors"
+          autoFocus
+        />
+      </div>
+
+      <div>
+        {query && results.length === 0 && (
+          <div className="text-center py-12 text-gray-500">
+            No results found for "{query}".
+          </div>
+        )}
+
+        {results.length > 0 && (
+          <div className="space-y-4">
+            <h2 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-4">{results.length} Results</h2>
+            {results.map((item) => (
+              <Link 
+                key={item.slug} 
+                to={`/en/${item.slug}`}
+                className="block p-6 bg-white border border-gray-200 rounded-2xl hover:border-blue-500 hover:shadow-md transition-all"
+              >
+                <div className="text-xs font-bold text-blue-600 mb-2 uppercase">{item.track}</div>
+                <h3 className="text-xl font-bold text-gray-900 mb-2">{item.title}</h3>
+                <p className="text-gray-600">{item.summary}</p>
+              </Link>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
