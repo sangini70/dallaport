@@ -88,31 +88,31 @@ export default function Home() {
       <section>
         <h2 className="text-2xl font-extrabold text-gray-900 mb-6">카테고리 탐색</h2>
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-          <Link to="/search?q=환율" className="p-6 bg-white border border-gray-200 rounded-2xl hover:border-blue-500 hover:shadow-md transition-all group text-center">
+          <Link to="/category/exchange-rate" className="p-6 bg-white border border-gray-200 rounded-2xl hover:border-blue-500 hover:shadow-md transition-all group text-center">
             <div className="w-10 h-10 mx-auto bg-blue-50 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
               <TrendingUp className="w-5 h-5 text-blue-600" />
             </div>
             <h3 className="font-bold text-gray-900 mb-1">환율</h3>
           </Link>
-          <Link to="/search?q=달러" className="p-6 bg-white border border-gray-200 rounded-2xl hover:border-blue-500 hover:shadow-md transition-all group text-center">
+          <Link to="/category/dollar" className="p-6 bg-white border border-gray-200 rounded-2xl hover:border-blue-500 hover:shadow-md transition-all group text-center">
             <div className="w-10 h-10 mx-auto bg-green-50 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
               <DollarSign className="w-5 h-5 text-green-600" />
             </div>
             <h3 className="font-bold text-gray-900 mb-1">달러</h3>
           </Link>
-          <Link to="/search?q=금리" className="p-6 bg-white border border-gray-200 rounded-2xl hover:border-blue-500 hover:shadow-md transition-all group text-center">
+          <Link to="/category/interest-rate" className="p-6 bg-white border border-gray-200 rounded-2xl hover:border-blue-500 hover:shadow-md transition-all group text-center">
             <div className="w-10 h-10 mx-auto bg-purple-50 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
               <BarChart3 className="w-5 h-5 text-purple-600" />
             </div>
             <h3 className="font-bold text-gray-900 mb-1">금리</h3>
           </Link>
-          <Link to="/search?q=ETF" className="p-6 bg-white border border-gray-200 rounded-2xl hover:border-blue-500 hover:shadow-md transition-all group text-center">
+          <Link to="/category/etf" className="p-6 bg-white border border-gray-200 rounded-2xl hover:border-blue-500 hover:shadow-md transition-all group text-center">
             <div className="w-10 h-10 mx-auto bg-indigo-50 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
               <BookOpen className="w-5 h-5 text-indigo-600" />
             </div>
             <h3 className="font-bold text-gray-900 mb-1">ETF</h3>
           </Link>
-          <Link to="/search?q=경제기초" className="p-6 bg-white border border-gray-200 rounded-2xl hover:border-blue-500 hover:shadow-md transition-all group text-center">
+          <Link to="/category/economy-basics" className="p-6 bg-white border border-gray-200 rounded-2xl hover:border-blue-500 hover:shadow-md transition-all group text-center">
             <div className="w-10 h-10 mx-auto bg-yellow-50 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
               <BookOpen className="w-5 h-5 text-yellow-600" />
             </div>

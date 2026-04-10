@@ -2,23 +2,16 @@ import { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { Search as SearchIcon } from 'lucide-react';
-import { fetchSearchIndex } from '../services/publicData';
-
-interface SearchResult {
-  slug: string;
-  title: string;
-  summary: string;
-  track: string;
-}
+import { getPublishedPosts, Post } from '../services/posts';
 
 export default function EnSearch() {
   const [query, setQuery] = useState('');
-  const [results, setResults] = useState<SearchResult[]>([]);
-  const [allData, setAllData] = useState<SearchResult[]>([]);
+  const [results, setResults] = useState<Post[]>([]);
+  const [allData, setAllData] = useState<Post[]>([]);
 
   useEffect(() => {
-    fetchSearchIndex('en')
-      .then(data => setAllData(data.items || []))
+    getPublishedPosts('en')
+      .then(data => setAllData(data))
       .catch(err => console.error('Failed to load search index', err));
   }, []);
 
@@ -30,13 +23,32 @@ export default function EnSearch() {
     const lowerQuery = query.toLowerCase();
     const filtered = allData.filter(item => 
       item.title.toLowerCase().includes(lowerQuery) || 
-      item.summary.toLowerCase().includes(lowerQuery)
+      (item.shortDescription && item.shortDescription.toLowerCase().includes(lowerQuery)) ||
+      (item.contentHtml && item.contentHtml.toLowerCase().includes(lowerQuery))
     );
     setResults(filtered);
   }, [query, allData]);
 
+  const getCategoryName = (cat: string) => {
+    const map: Record<string, string> = {
+      'exchange-rate': 'Exchange Rate',
+      'dollar': 'Dollar',
+      'interest-rate': 'Interest Rate',
+      'etf': 'ETF',
+      'economy-basics': 'Economy Basics'
+    };
+    return map[cat] || cat;
+  };
+
+  const getFallbackDescription = (post: Post) => {
+    if (post.seoDescription) return post.seoDescription;
+    if (post.shortDescription) return post.shortDescription;
+    const stripped = post.contentHtml?.replace(/<[^>]+>/g, '') || '';
+    return stripped.substring(0, 100) + (stripped.length > 100 ? '...' : '');
+  };
+
   return (
-    <div className="max-w-3xl mx-auto py-8">
+    <div className="max-w-3xl mx-auto py-8 px-4">
       <Helmet>
         <title>Search | dallaport</title>
       </Helmet>
@@ -70,12 +82,12 @@ export default function EnSearch() {
             {results.map((item) => (
               <Link 
                 key={item.slug} 
-                to={`/en/${item.slug}`}
+                to={`/en/post/${item.slug}`}
                 className="block p-6 bg-white border border-gray-200 rounded-2xl hover:border-blue-500 hover:shadow-md transition-all"
               >
-                <div className="text-xs font-bold text-blue-600 mb-2 uppercase">{item.track}</div>
+                <div className="text-xs font-bold text-blue-600 mb-2 uppercase">{getCategoryName(item.category)}</div>
                 <h3 className="text-xl font-bold text-gray-900 mb-2">{item.title}</h3>
-                <p className="text-gray-600">{item.summary}</p>
+                <p className="text-gray-600">{getFallbackDescription(item)}</p>
               </Link>
             ))}
           </div>

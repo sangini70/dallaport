@@ -1,16 +1,23 @@
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { fetchFlowIndex } from '../services/publicData';
+import { getPublishedPosts, Post } from '../services/posts';
 
 export default function FlowMap() {
-  const [flowData, setFlowData] = useState<Record<string, string[]>>({});
+  const [flowData, setFlowData] = useState<Record<string, Post[]>>({});
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchFlowIndex('ko')
-      .then(data => {
-        setFlowData(data);
+    getPublishedPosts('ko')
+      .then(posts => {
+        const grouped: Record<string, Post[]> = {};
+        posts.forEach(post => {
+          if (!grouped[post.category]) {
+            grouped[post.category] = [];
+          }
+          grouped[post.category].push(post);
+        });
+        setFlowData(grouped);
         setLoading(false);
       })
       .catch(err => {
@@ -18,6 +25,17 @@ export default function FlowMap() {
         setLoading(false);
       });
   }, []);
+
+  const getCategoryName = (cat: string) => {
+    const map: Record<string, string> = {
+      'exchange-rate': '환율',
+      'dollar': '달러',
+      'interest-rate': '금리',
+      'etf': 'ETF',
+      'economy-basics': '경제 기초'
+    };
+    return map[cat] || cat;
+  };
 
   return (
     <div className="py-8 max-w-5xl mx-auto px-4">
@@ -40,21 +58,21 @@ export default function FlowMap() {
           <div className="py-10 text-center text-gray-500">흐름도를 불러오는 중입니다...</div>
         ) : (
           <div className="space-y-12">
-            {Object.entries(flowData).map(([track, slugs]) => (
-              <div key={track} className="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+            {Object.entries(flowData).map(([category, posts]) => (
+              <div key={category} className="bg-gray-50 rounded-2xl p-6 border border-gray-100">
                 <h2 className="text-xl font-bold text-gray-900 mb-6 capitalize flex items-center gap-2">
                   <div className="w-3 h-3 rounded-full bg-blue-600"></div>
-                  {track === 'exchange-rate' ? '환율' : track}
+                  {getCategoryName(category)}
                 </h2>
                 
                 <div className="relative pl-6 border-l-2 border-gray-200 ml-1 space-y-6">
-                  {slugs.map((slug, index) => (
-                    <div key={slug} className="relative">
+                  {posts.map((post, index) => (
+                    <div key={post.slug} className="relative">
                       {/* Tree branch line */}
                       <div className="absolute -left-6 top-4 w-6 h-0.5 bg-gray-200"></div>
                       
                       <Link 
-                        to={`/post/${slug}`}
+                        to={`/post/${post.slug}`}
                         className="block bg-white p-4 rounded-xl border border-gray-200 hover:border-blue-500 hover:shadow-md transition-all group"
                       >
                         <div className="flex items-center gap-3">
@@ -63,10 +81,9 @@ export default function FlowMap() {
                           </span>
                           <div>
                             <h3 className="font-bold text-gray-900 group-hover:text-blue-600 transition-colors">
-                              {/* Display slug as title for now, ideally we'd fetch titles */}
-                              {slug.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                              {post.title}
                             </h3>
-                            <p className="text-xs text-gray-500 mt-1">/post/{slug}</p>
+                            <p className="text-xs text-gray-500 mt-1">/post/{post.slug}</p>
                           </div>
                         </div>
                       </Link>

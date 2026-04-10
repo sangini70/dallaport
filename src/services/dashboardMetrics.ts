@@ -1,3 +1,6 @@
+import { collection, getDocs, query, where } from 'firebase/firestore';
+import { db } from '../lib/firebase';
+
 export interface DashboardMetrics {
   totalViews: number;
   averageCtr: string;
@@ -7,49 +10,50 @@ export interface DashboardMetrics {
 
 export async function fetchDashboardMetrics(language: string = 'ko'): Promise<DashboardMetrics> {
   try {
-    // 1. Fetch flow-index.json
-    const indexRes = await fetch(`/data/${language}/flow-index.json`);
-    if (!indexRes.ok) throw new Error('Failed to fetch flow-index');
-    const flowIndex = await indexRes.json();
-
-    // 2. Collect all slugs
-    const slugs = new Set<string>();
-    for (const track in flowIndex) {
-      flowIndex[track].forEach((slug: string) => slugs.add(slug));
-    }
-
-    // 3. Fetch all detail JSONs
-    const posts = [];
+    const postsRef = collection(db, 'posts');
+    const q = query(postsRef, where('language', '==', language));
+    const snapshot = await getDocs(q);
+    
+    const posts: any[] = [];
     let totalViews = 0;
     let totalCtr = 0;
     let ctrCount = 0;
 
-    for (const slug of slugs) {
-      try {
-        const detailRes = await fetch(`/data/${language}/detail/${slug}.json`);
-        if (detailRes.ok) {
-          const post = await detailRes.json();
-          const views = post.views || 0;
-          const ctr = post.ctr || 0;
-          
-          posts.push({ ...post, views, ctr });
-          totalViews += views;
-          totalCtr += ctr;
-          ctrCount++;
-        }
-      } catch (e) {
-        console.error(`Failed to fetch detail for ${slug}`, e);
+    snapshot.forEach((doc) => {
+      const data = doc.data();
+      // Exclude dummy/seed data based on titles if they exist in DB
+      const dummyTitles = [
+        '환율이란 무엇인가?',
+        '환율과 금리의 상관관계',
+        '고환율 시대, 시장의 움직임',
+        '환율 변동성을 활용한 투자 전략'
+      ];
+      
+      if (dummyTitles.includes(data.title)) {
+        return; // Skip dummy data
       }
-    }
 
-    // 4. Calculate metrics
+      const views = data.views || 0;
+      const ctr = data.ctr || 0;
+      
+      posts.push({ id: doc.id, ...data, views, ctr });
+      totalViews += views;
+      totalCtr += ctr;
+      ctrCount++;
+    });
+
     const averageCtr = ctrCount > 0 ? (totalCtr / ctrCount).toFixed(1) + '%' : '0%';
     
-    // 5. Sort for top posts
+    // Sort for top posts by views
     const topPosts = [...posts].sort((a, b) => b.views - a.views).slice(0, 5);
     
-    // 6. Sort for low CTR posts
-    const lowCtrPosts = [...posts].sort((a, b) => a.ctr - b.ctr).slice(0, 5);
+    // Sort for low CTR posts (only consider posts with some views/impressions to be meaningful)
+    // Assuming we want to improve posts that are actually seen but not clicked much.
+    // If all have 0 views, it will just show the ones with 0 ctr.
+    const lowCtrPosts = [...posts]
+      .filter(p => p.status === 'published') // Only care about published posts for CTR improvement
+      .sort((a, b) => a.ctr - b.ctr)
+      .slice(0, 5);
 
     return {
       totalViews,

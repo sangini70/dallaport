@@ -4,17 +4,11 @@ export function usePrefetchNext(nextSlug?: string, lang: 'ko' | 'en' = 'ko') {
   useEffect(() => {
     if (!nextSlug) return;
     
-    const url = `/data/${lang}/detail/${nextSlug}.json`;
-    
-    // 간단한 prefetch 로직
-    const link = document.createElement('link');
-    link.rel = 'prefetch';
-    link.href = url;
-    link.as = 'fetch';
-    document.head.appendChild(link);
+    // Prefetching JSON files is no longer applicable as we use Firestore.
+    // We could prefetch the next post from Firestore here if needed,
+    // but for now, we'll just return.
     
     return () => {
-      document.head.removeChild(link);
     };
   }, [nextSlug, lang]);
 }

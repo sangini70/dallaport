@@ -1,4 +1,4 @@
-import { collection, getDocs, query, where, orderBy, limit } from 'firebase/firestore';
+import { collection, getDocs, query, where, orderBy, limit, getDoc, doc } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 
 export interface Post {
@@ -53,5 +53,19 @@ export async function getPublishedPosts(lang: string = 'ko'): Promise<Post[]> {
   } catch (error) {
     console.error("Error fetching posts:", error);
     return [];
+  }
+}
+
+export async function getPostBySlug(slug: string): Promise<Post | null> {
+  try {
+    const docRef = doc(db, 'posts', slug);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      return { id: docSnap.id, ...docSnap.data() } as Post;
+    }
+    return null;
+  } catch (error) {
+    console.error("Error fetching post by slug:", error);
+    return null;
   }
 }

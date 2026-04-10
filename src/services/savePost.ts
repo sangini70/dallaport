@@ -1,4 +1,4 @@
-import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { doc, setDoc, getDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import firebaseConfig from '../../firebase-applet-config.json';
 
@@ -26,13 +26,18 @@ export async function savePost(data: PostData) {
 
   try {
     const docRef = doc(db, 'posts', data.slug);
+    const docSnap = await getDoc(docRef);
     
-    const postToSave = {
+    const postToSave: any = {
       ...data,
       updatedAt: serverTimestamp(),
       views: data.views || 0,
       ctr: data.ctr || 0,
     };
+
+    if (!docSnap.exists()) {
+      postToSave.createdAt = serverTimestamp();
+    }
 
     console.log('[SAVE] Attempting setDoc...');
     try {
