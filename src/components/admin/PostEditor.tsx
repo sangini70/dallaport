@@ -48,22 +48,32 @@ export default function PostEditor({ initialData, onSave }: PostEditorProps) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Auto-assign random time between 08:00 and 21:00 next day if publishDate is empty
+    // Auto-assign publishDate if empty
     let finalPublishDate = formData.publishDate;
     if (!finalPublishDate) {
-      const tomorrow = new Date();
-      tomorrow.setDate(tomorrow.getDate() + 1);
-      const randomHour = Math.floor(Math.random() * (21 - 8 + 1)) + 8;
-      const randomMinute = Math.floor(Math.random() * 60);
-      tomorrow.setHours(randomHour, randomMinute, 0, 0);
-      
-      // Format to YYYY-MM-DDThh:mm
-      const year = tomorrow.getFullYear();
-      const month = String(tomorrow.getMonth() + 1).padStart(2, '0');
-      const day = String(tomorrow.getDate()).padStart(2, '0');
-      const hours = String(tomorrow.getHours()).padStart(2, '0');
-      const minutes = String(tomorrow.getMinutes()).padStart(2, '0');
-      finalPublishDate = `${year}-${month}-${day}T${hours}:${minutes}`;
+      if (formData.status === 'published') {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        finalPublishDate = `${year}-${month}-${day}T${hours}:${minutes}`;
+      } else {
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        const randomHour = Math.floor(Math.random() * (21 - 8 + 1)) + 8;
+        const randomMinute = Math.floor(Math.random() * 60);
+        tomorrow.setHours(randomHour, randomMinute, 0, 0);
+        
+        // Format to YYYY-MM-DDThh:mm
+        const year = tomorrow.getFullYear();
+        const month = String(tomorrow.getMonth() + 1).padStart(2, '0');
+        const day = String(tomorrow.getDate()).padStart(2, '0');
+        const hours = String(tomorrow.getHours()).padStart(2, '0');
+        const minutes = String(tomorrow.getMinutes()).padStart(2, '0');
+        finalPublishDate = `${year}-${month}-${day}T${hours}:${minutes}`;
+      }
     }
 
     onSave({ ...formData, publishDate: finalPublishDate });

@@ -47,28 +47,6 @@ export async function savePost(data: PostData) {
       console.error('[SAVE] setDoc FAILED:', setDocError);
       throw setDocError;
     }
-
-    console.log('[SAVE] Attempting /api/sync-json...');
-    try {
-      // After saving to Firestore, trigger JSON sync
-      const response = await fetch('/api/sync-json', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(postToSave),
-      });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.warn(`[SAVE] /api/sync-json FAILED (Non-fatal): Status ${response.status}, Body: ${errorText}`);
-        // 임시 조치: JSON 동기화가 실패해도 Firestore 저장이 성공했으므로 에러를 던지지 않음
-      } else {
-        console.log('[SAVE] /api/sync-json SUCCESS');
-      }
-    } catch (syncError) {
-      console.warn(`[SAVE] /api/sync-json Network Error (Non-fatal):`, syncError);
-    }
     
     return true;
   } catch (error) {

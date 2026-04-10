@@ -2,6 +2,9 @@ import { useEffect, useState } from 'react';
 import DashboardSummaryCards from '../../components/admin/DashboardSummaryCards';
 import TopPostsList from '../../components/admin/TopPostsList';
 import CtrList from '../../components/admin/CtrList';
+import HighCtrLowViewsList from '../../components/admin/HighCtrLowViewsList';
+import ViewsChart from '../../components/admin/ViewsChart';
+import HourChart from '../../components/admin/HourChart';
 import { fetchDashboardMetrics, DashboardMetrics } from '../../services/dashboardMetrics';
 
 export default function AdminDashboard() {
@@ -27,9 +30,16 @@ export default function AdminDashboard() {
 
       <DashboardSummaryCards totalViews={metrics.totalViews} averageCtr={metrics.averageCtr} />
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8 mt-8">
-        <TopPostsList posts={metrics.topPosts} />
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <ViewsChart data={metrics.viewsByDate} />
+        <HourChart data={metrics.viewsByHour} />
+      </div>
+
+      <TopPostsList posts={metrics.topPosts} />
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
         <CtrList posts={metrics.lowCtrPosts} />
+        <HighCtrLowViewsList posts={metrics.highCtrLowViewsPosts} />
       </div>
 
       <div className="mt-12 text-center text-xs text-gray-400 border-t border-gray-100 pt-6">

@@ -6,6 +6,9 @@ export interface DashboardMetrics {
   averageCtr: string;
   topPosts: any[];
   lowCtrPosts: any[];
+  highCtrLowViewsPosts: any[];
+  viewsByDate: { date: string; views: number }[];
+  viewsByHour: { hour: string; views: number }[];
 }
 
 export async function fetchDashboardMetrics(language: string = 'ko'): Promise<DashboardMetrics> {
@@ -16,8 +19,19 @@ export async function fetchDashboardMetrics(language: string = 'ko'): Promise<Da
     
     const posts: any[] = [];
     let totalViews = 0;
-    let totalCtr = 0;
-    let ctrCount = 0;
+    let totalClicks = 0;
+    let totalImpressions = 0;
+
+    const viewsByDateMap: Record<string, number> = {};
+    const viewsByHourMap: Record<string, number> = {};
+
+    // Initialize last 7 days
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      const dateStr = `${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+      viewsByDateMap[dateStr] = 0;
+    }
 
     snapshot.forEach((doc) => {
       const data = doc.data();
@@ -34,40 +48,77 @@ export async function fetchDashboardMetrics(language: string = 'ko'): Promise<Da
       }
 
       const views = data.views || 0;
-      const ctr = data.ctr || 0;
+      const impressions = data.impressions || 0;
+      const clicks = data.clicks || 0;
+      const ctr = impressions > 0 ? (clicks / impressions) * 100 : 0;
       
-      posts.push({ id: doc.id, ...data, views, ctr });
+      posts.push({ id: doc.id, ...data, views, impressions, clicks, ctr });
       totalViews += views;
-      totalCtr += ctr;
-      ctrCount++;
+      totalClicks += clicks;
+      totalImpressions += impressions;
+
+      const dateObj = data.publishedAt ? new Date(data.publishedAt) : (data.publishDate ? new Date(data.publishDate) : (data.createdAt?.toMillis ? new Date(data.createdAt.toMillis()) : new Date()));
+      
+      const dateStr = `${String(dateObj.getMonth() + 1).padStart(2, '0')}-${String(dateObj.getDate()).padStart(2, '0')}`;
+      if (viewsByDateMap[dateStr] !== undefined) {
+        viewsByDateMap[dateStr] += views;
+      }
+
+      const hour = dateObj.getHours();
+      const exactHourStr = `${hour}시`;
+      if (viewsByHourMap[exactHourStr] === undefined) {
+          viewsByHourMap[exactHourStr] = 0;
+      }
+      viewsByHourMap[exactHourStr] += views;
     });
 
-    const averageCtr = ctrCount > 0 ? (totalCtr / ctrCount).toFixed(1) + '%' : '0%';
+    const averageCtr = totalImpressions > 0 ? ((totalClicks / totalImpressions) * 100).toFixed(2) + '%' : '0.00%';
     
     // Sort for top posts by views
     const topPosts = [...posts].sort((a, b) => b.views - a.views).slice(0, 5);
     
-    // Sort for low CTR posts (only consider posts with some views/impressions to be meaningful)
-    // Assuming we want to improve posts that are actually seen but not clicked much.
-    // If all have 0 views, it will just show the ones with 0 ctr.
+    // Sort for low CTR posts (impressions >= 10)
     const lowCtrPosts = [...posts]
-      .filter(p => p.status === 'published') // Only care about published posts for CTR improvement
+      .filter(p => p.impressions >= 10)
       .sort((a, b) => a.ctr - b.ctr)
       .slice(0, 5);
+
+    // High CTR, Low Views
+    const avgViews = posts.length > 0 ? totalViews / posts.length : 0;
+    const avgCtrNum = totalImpressions > 0 ? (totalClicks / totalImpressions) * 100 : 0;
+    
+    const highCtrLowViewsPosts = [...posts]
+      .filter(p => p.ctr >= avgCtrNum && p.views < avgViews)
+      .sort((a, b) => b.ctr - a.ctr)
+      .slice(0, 5);
+
+    const viewsByDate = Object.keys(viewsByDateMap).map(date => ({ date, views: viewsByDateMap[date] }));
+    
+    const viewsByHour = [];
+    for (let i = 0; i < 24; i++) {
+        const hStr = `${i}시`;
+        viewsByHour.push({ hour: hStr, views: viewsByHourMap[hStr] || 0 });
+    }
 
     return {
       totalViews,
       averageCtr,
       topPosts,
-      lowCtrPosts
+      lowCtrPosts,
+      highCtrLowViewsPosts,
+      viewsByDate,
+      viewsByHour
     };
   } catch (error) {
     console.error('Error fetching dashboard metrics:', error);
     return {
       totalViews: 0,
-      averageCtr: '0%',
+      averageCtr: '0.00%',
       topPosts: [],
-      lowCtrPosts: []
+      lowCtrPosts: [],
+      highCtrLowViewsPosts: [],
+      viewsByDate: [],
+      viewsByHour: []
     };
   }
 }
