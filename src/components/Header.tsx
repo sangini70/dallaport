@@ -13,10 +13,10 @@ export default function Header() {
           dallaport
         </Link>
         <nav className="flex items-center gap-6">
-          <Link to="#" className="text-gray-600 hover:text-gray-900 text-sm font-medium">
+          <Link to="/about" className="text-gray-600 hover:text-gray-900 text-sm font-medium">
             About
           </Link>
-          <Link to="#" className="text-gray-600 hover:text-gray-900 text-sm font-medium">
+          <Link to="/contact" className="text-gray-600 hover:text-gray-900 text-sm font-medium">
             Contact
           </Link>
           <LanguageSwitcher />

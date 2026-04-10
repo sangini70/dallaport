@@ -64,9 +64,7 @@ export default function EnFlowStep() {
         {data.shortDescription || data.summary}
       </p>
 
-      <div className="prose prose-lg prose-blue max-w-none my-10">
-        <ReactMarkdown>{data.content}</ReactMarkdown>
-      </div>
+      <div className="prose prose-lg prose-blue max-w-none my-10" dangerouslySetInnerHTML={{ __html: data.content }} />
 
       <AdSlot position="middle" />
 

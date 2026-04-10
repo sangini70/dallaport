@@ -1,0 +1,57 @@
+import { collection, getDocs, query, where, orderBy, limit } from 'firebase/firestore';
+import { db } from '../lib/firebase';
+
+export interface Post {
+  id: string;
+  slug: string;
+  title: string;
+  seoDescription: string;
+  shortDescription: string;
+  contentHtml: string;
+  category: string;
+  language: string;
+  status: string;
+  publishDate: string;
+  createdAt?: any;
+  updatedAt?: any;
+  views: number;
+  thumbnail?: string;
+  tags?: string;
+}
+
+export async function getPublishedPosts(lang: string = 'ko'): Promise<Post[]> {
+  try {
+    const postsRef = collection(db, 'posts');
+    const q = query(
+      postsRef,
+      where('status', '==', 'published'),
+      where('language', '==', lang)
+    );
+    
+    const snapshot = await getDocs(q);
+    const posts: Post[] = [];
+    
+    snapshot.forEach((doc) => {
+      const data = doc.data();
+      // Filter out future publish dates
+      const now = new Date();
+      const pubDate = data.publishDate ? new Date(data.publishDate) : new Date(0);
+      
+      if (pubDate <= now) {
+        posts.push({ id: doc.id, ...data } as Post);
+      }
+    });
+
+    // Sort by publishDate desc, then createdAt desc
+    posts.sort((a, b) => {
+      const dateA = a.publishDate ? new Date(a.publishDate).getTime() : (a.createdAt?.toMillis?.() || 0);
+      const dateB = b.publishDate ? new Date(b.publishDate).getTime() : (b.createdAt?.toMillis?.() || 0);
+      return dateB - dateA;
+    });
+
+    return posts;
+  } catch (error) {
+    console.error("Error fetching posts:", error);
+    return [];
+  }
+}

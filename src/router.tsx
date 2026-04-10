@@ -5,6 +5,8 @@ import Home from './pages/Home';
 import FlowMap from './pages/FlowMap';
 import FlowStep from './pages/FlowStep';
 import Search from './pages/Search';
+import About from './pages/About';
+import Contact from './pages/Contact';
 import EnHome from './pages/EnHome';
 import EnFlowMap from './pages/EnFlowMap';
 import EnFlowStep from './pages/EnFlowStep';
@@ -27,6 +29,8 @@ export const router = createBrowserRouter([
       { index: true, element: <Home /> },
       { path: 'flow-map', element: <FlowMap /> },
       { path: 'search', element: <Search /> },
+      { path: 'about', element: <About /> },
+      { path: 'contact', element: <Contact /> },
       { path: 'post/:slug', element: <FlowStep /> },
       { path: 'en', element: <EnHome /> },
       { path: 'en/flow-map', element: <EnFlowMap /> },
