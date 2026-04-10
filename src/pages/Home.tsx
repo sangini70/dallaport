@@ -1,8 +1,11 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { Search as SearchIcon, TrendingUp, DollarSign, BarChart3, BookOpen, Calculator } from 'lucide-react';
+import { TrendingUp, DollarSign, BarChart3, BookOpen } from 'lucide-react';
 import { getPublishedPosts, Post } from '../services/posts';
+import SearchBar from '../components/SearchBar';
+import FlowSection from '../components/FlowSection';
+import PopularPostsSection from '../components/PopularPostsSection';
 
 export default function Home() {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -17,9 +20,11 @@ export default function Home() {
     loadPosts();
   }, []);
 
-  const latestPosts = posts.slice(0, 6);
-  const popularPosts = [...posts].sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 3);
-  const hasPopularPosts = popularPosts.some(p => p.views > 0);
+  // Latest + Good Reaction (Top 10 latest, sorted by views)
+  const latestPosts = [...posts]
+    .slice(0, 10)
+    .sort((a, b) => (b.views || 0) - (a.views || 0))
+    .slice(0, 6);
 
   const getCategoryName = (cat: string) => {
     const map: Record<string, string> = {
@@ -35,7 +40,6 @@ export default function Home() {
   const getFallbackDescription = (post: Post) => {
     if (post.seoDescription) return post.seoDescription;
     if (post.shortDescription) return post.shortDescription;
-    // Strip HTML and get first 100 chars
     const stripped = post.contentHtml?.replace(/<[^>]+>/g, '') || '';
     return stripped.substring(0, 100) + (stripped.length > 100 ? '...' : '');
   };
@@ -57,74 +61,33 @@ export default function Home() {
         <meta name="description" content="딸라포트(dallaport)에서 환율, 금리, 달러, ETF의 구조를 쉽게 이해하세요." />
       </Helmet>
 
-      {/* Hero */}
-      <section className="flex flex-col md:flex-row items-center gap-12">
-        <div className="flex-1 space-y-6">
-          <div className="flex items-center gap-4 text-sm font-bold text-gray-500 tracking-wider">
-            <span className="w-8 h-px bg-gray-300"></span>
-            GUIDE 01
-          </div>
-          <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-gray-900 leading-tight">
-            환율과 달러의 구조를<br />
-            이해하는 금융 가이드
-          </h1>
-          <p className="text-lg text-gray-600 max-w-lg leading-relaxed">
-            환율, 금리, 달러, ETF의 구조를 이해하기 쉽게 설명합니다.
-          </p>
-          <div className="pt-2">
-            <Link to="/about" className="inline-block bg-gray-900 text-white px-8 py-3.5 rounded-lg font-bold text-sm hover:bg-gray-800 transition-colors">
-              사이트 소개
-            </Link>
-          </div>
+      {/* Hero with Search */}
+      <section className="flex flex-col items-center text-center pt-8 pb-4">
+        <div className="flex items-center gap-4 text-sm font-bold text-blue-600 tracking-wider mb-6">
+          <span className="w-8 h-px bg-blue-300"></span>
+          DALLAPORT GUIDE
+          <span className="w-8 h-px bg-blue-300"></span>
         </div>
-        <div className="flex-1 w-full">
-          <div className="bg-gray-50 rounded-2xl aspect-[4/3] w-full flex items-center justify-center border border-gray-100 overflow-hidden">
-            <img src="https://picsum.photos/seed/finance/800/600" alt="Finance Guide" className="w-full h-full object-cover opacity-90 mix-blend-multiply" />
-          </div>
-        </div>
+        <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-gray-900 leading-tight mb-6">
+          환율과 달러의 구조를<br />
+          이해하는 금융 가이드
+        </h1>
+        <p className="text-lg text-gray-600 max-w-lg leading-relaxed mb-8">
+          어려운 금융 개념, 딸라포트에서 단계별로 쉽게 학습하세요.
+        </p>
+        
+        <SearchBar language="ko" />
       </section>
 
-      {/* Categories */}
-      <section>
-        <h2 className="text-2xl font-extrabold text-gray-900 mb-6">카테고리 탐색</h2>
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-          <Link to="/category/exchange-rate" className="p-6 bg-white border border-gray-200 rounded-2xl hover:border-blue-500 hover:shadow-md transition-all group text-center">
-            <div className="w-10 h-10 mx-auto bg-blue-50 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-              <TrendingUp className="w-5 h-5 text-blue-600" />
-            </div>
-            <h3 className="font-bold text-gray-900 mb-1">환율</h3>
-          </Link>
-          <Link to="/category/dollar" className="p-6 bg-white border border-gray-200 rounded-2xl hover:border-blue-500 hover:shadow-md transition-all group text-center">
-            <div className="w-10 h-10 mx-auto bg-green-50 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-              <DollarSign className="w-5 h-5 text-green-600" />
-            </div>
-            <h3 className="font-bold text-gray-900 mb-1">달러</h3>
-          </Link>
-          <Link to="/category/interest-rate" className="p-6 bg-white border border-gray-200 rounded-2xl hover:border-blue-500 hover:shadow-md transition-all group text-center">
-            <div className="w-10 h-10 mx-auto bg-purple-50 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-              <BarChart3 className="w-5 h-5 text-purple-600" />
-            </div>
-            <h3 className="font-bold text-gray-900 mb-1">금리</h3>
-          </Link>
-          <Link to="/category/etf" className="p-6 bg-white border border-gray-200 rounded-2xl hover:border-blue-500 hover:shadow-md transition-all group text-center">
-            <div className="w-10 h-10 mx-auto bg-indigo-50 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-              <BookOpen className="w-5 h-5 text-indigo-600" />
-            </div>
-            <h3 className="font-bold text-gray-900 mb-1">ETF</h3>
-          </Link>
-          <Link to="/category/economy-basics" className="p-6 bg-white border border-gray-200 rounded-2xl hover:border-blue-500 hover:shadow-md transition-all group text-center">
-            <div className="w-10 h-10 mx-auto bg-yellow-50 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-              <BookOpen className="w-5 h-5 text-yellow-600" />
-            </div>
-            <h3 className="font-bold text-gray-900 mb-1">경제 기초</h3>
-          </Link>
-        </div>
-      </section>
+      <FlowSection language="ko" />
+
+      {!loading && <PopularPostsSection language="ko" />}
 
       {/* Latest */}
       <section>
         <div className="mb-6">
-          <h2 className="text-2xl font-extrabold text-gray-900">최신 글</h2>
+          <h2 className="text-2xl font-extrabold text-gray-900">주목받는 최신 글</h2>
+          <p className="text-gray-500 mt-1">최근 발행된 글 중 반응이 좋은 글입니다.</p>
         </div>
         
         {loading ? (
@@ -159,39 +122,6 @@ export default function Home() {
           </div>
         )}
       </section>
-
-      {/* Popular (Only show if there's data) */}
-      {!loading && hasPopularPosts && (
-        <section>
-          <div className="mb-6">
-            <h2 className="text-2xl font-extrabold text-gray-900">많이 보는 글</h2>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {popularPosts.map((post) => (
-              <Link key={post.id} to={`/post/${post.slug}`} className="group block">
-                <div className="aspect-[4/3] rounded-2xl overflow-hidden mb-4 bg-gray-200">
-                  <img src={getThumbnail(post)} alt={post.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                </div>
-                <div className="flex items-start justify-between gap-4 mb-2">
-                  <h4 className="font-bold text-lg text-gray-900 group-hover:text-blue-600 transition-colors line-clamp-2">
-                    {post.title}
-                  </h4>
-                  <span className="text-[10px] font-bold text-gray-500 tracking-wider bg-gray-100 px-2 py-1 rounded shrink-0">
-                    {getCategoryName(post.category)}
-                  </span>
-                </div>
-                <p className="text-sm text-gray-600 line-clamp-2 mb-4 leading-relaxed">
-                  {getFallbackDescription(post)}
-                </p>
-                <div className="flex flex-col gap-2">
-                  <span className="text-xs text-gray-400">{formatDate(post.publishDate)}</span>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </section>
-      )}
 
       {/* Calculator Banner */}
       <section>

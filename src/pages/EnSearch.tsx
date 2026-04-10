@@ -1,11 +1,14 @@
 import { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { Search as SearchIcon } from 'lucide-react';
 import { getPublishedPosts, Post } from '../services/posts';
 
 export default function EnSearch() {
-  const [query, setQuery] = useState('');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const initialQuery = searchParams.get('q') || '';
+  
+  const [query, setQuery] = useState(initialQuery);
   const [results, setResults] = useState<Post[]>([]);
   const [allData, setAllData] = useState<Post[]>([]);
 
@@ -24,10 +27,17 @@ export default function EnSearch() {
     const filtered = allData.filter(item => 
       item.title.toLowerCase().includes(lowerQuery) || 
       (item.shortDescription && item.shortDescription.toLowerCase().includes(lowerQuery)) ||
-      (item.contentHtml && item.contentHtml.toLowerCase().includes(lowerQuery))
+      (item.contentHtml && item.contentHtml.toLowerCase().includes(lowerQuery)) ||
+      (item.category && item.category.toLowerCase().includes(lowerQuery)) ||
+      (item.tags && item.tags.toLowerCase().includes(lowerQuery))
     );
     setResults(filtered);
-  }, [query, allData]);
+    
+    // Update URL without full reload
+    if (query !== initialQuery) {
+      setSearchParams({ q: query }, { replace: true });
+    }
+  }, [query, allData, setSearchParams, initialQuery]);
 
   const getCategoryName = (cat: string) => {
     const map: Record<string, string> = {
