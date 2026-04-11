@@ -43,7 +43,9 @@ export default function EnFlowStep() {
   const domain = typeof window !== 'undefined' ? window.location.origin : 'https://dallaport.com';
 
   const metaDescription = getSeoDescription(post.seoDescription, post.shortDescription, post.contentHtml);
-  const ogImage = post.thumbnail || 'https://picsum.photos/seed/dallaport/1200/630';
+  const ogImage = post.thumbnail 
+    ? (post.thumbnail.startsWith('http') ? post.thumbnail : `${domain}${post.thumbnail}`)
+    : 'https://picsum.photos/seed/dallaport/1200/630';
 
   return (
     <article className="max-w-3xl mx-auto py-8 px-4">

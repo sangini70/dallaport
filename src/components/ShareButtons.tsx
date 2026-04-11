@@ -23,8 +23,40 @@ export default function ShareButtons({ url, title, description, image }: ShareBu
     : url;
 
   useEffect(() => {
-    if (window.Kakao && !window.Kakao.isInitialized()) {
-      window.Kakao.init(KAKAO_JS_KEY);
+    console.log("Kakao SDK initial check:", typeof window.Kakao);
+    
+    const initKakao = () => {
+      if (window.Kakao) {
+        if (!window.Kakao.isInitialized()) {
+          console.log("Initializing Kakao with key:", KAKAO_JS_KEY);
+          try {
+            window.Kakao.init(KAKAO_JS_KEY);
+            console.log("Kakao initialized successfully:", window.Kakao.isInitialized());
+          } catch (e) {
+            console.error("Kakao init error:", e);
+          }
+        } else {
+          console.log("Kakao already initialized");
+        }
+        return true;
+      }
+      return false;
+    };
+
+    if (!initKakao()) {
+      // If not found, poll for a few seconds
+      let attempts = 0;
+      const interval = setInterval(() => {
+        attempts++;
+        console.log(`Retrying Kakao init (attempt ${attempts})...`);
+        if (initKakao() || attempts >= 10) {
+          clearInterval(interval);
+          if (attempts >= 10 && !window.Kakao) {
+            console.warn("Kakao SDK failed to load after 10 attempts");
+          }
+        }
+      }, 500);
+      return () => clearInterval(interval);
     }
   }, []);
 
@@ -34,29 +66,65 @@ export default function ShareButtons({ url, title, description, image }: ShareBu
   };
 
   const handleKakaoShare = () => {
-    if (!window.Kakao) return;
+    console.log("kakao button clicked");
+    console.log("kakao share start");
+    console.log("window.Kakao:", window.Kakao);
     
-    window.Kakao.Share.sendDefault({
-      objectType: 'feed',
-      content: {
-        title: title,
+    if (!window.Kakao) {
+      console.error("Kakao SDK not loaded");
+      alert("카카오 SDK가 로드되지 않았습니다. 잠시 후 다시 시도해주세요.");
+      return;
+    }
+
+    const isInitialized = window.Kakao.isInitialized();
+    console.log("isInitialized():", isInitialized);
+
+    if (!isInitialized) {
+      console.log("Attempting late initialization...");
+      try {
+        window.Kakao.init(KAKAO_JS_KEY);
+        console.log("Late initialization success:", window.Kakao.isInitialized());
+      } catch (e) {
+        console.error("Late initialization failed:", e);
+        return;
+      }
+    }
+
+    try {
+      console.log("before sendDefault");
+      console.log("Payload:", {
+        title,
         description: description || '딸라포트에서 환율과 달러의 구조를 배워보세요.',
         imageUrl: image || 'https://picsum.photos/seed/dallaport/800/600',
-        link: {
-          mobileWebUrl: shareUrl,
-          webUrl: shareUrl,
-        },
-      },
-      buttons: [
-        {
-          title: '웹으로 보기',
+        shareUrl
+      });
+
+      window.Kakao.Share.sendDefault({
+        objectType: 'feed',
+        content: {
+          title: title,
+          description: description || '딸라포트에서 환율과 달러의 구조를 배워보세요.',
+          imageUrl: image || 'https://picsum.photos/seed/dallaport/800/600',
           link: {
             mobileWebUrl: shareUrl,
             webUrl: shareUrl,
           },
         },
-      ],
-    });
+        buttons: [
+          {
+            title: '웹으로 보기',
+            link: {
+              mobileWebUrl: shareUrl,
+              webUrl: shareUrl,
+            },
+          },
+        ],
+      });
+      console.log("sendDefault called successfully");
+    } catch (e) {
+      console.error("kakao share error", e);
+      alert("카카오 공유 중 오류가 발생했습니다.");
+    }
   };
 
   const handleXShare = () => {
