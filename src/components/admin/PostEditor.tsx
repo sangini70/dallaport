@@ -183,16 +183,22 @@ export default function PostEditor({ initialData, onSave }: PostEditorProps) {
             <h3 className="font-bold text-gray-900 mb-4 pb-2 border-b border-gray-100">문서 정보</h3>
             <div className="space-y-4">
               <div>
-                <label className="block text-xs font-bold text-gray-500 mb-1 uppercase tracking-wider">URL 슬러그</label>
+                <label className="block text-xs font-bold text-gray-500 mb-1 uppercase tracking-wider">
+                  URL 슬러그 {initialData?.slug && <span className="text-red-500 font-normal normal-case ml-2">(고정됨: SEO 보호)</span>}
+                </label>
                 <input 
                   type="text" 
                   name="slug" 
                   value={formData.slug} 
                   onChange={handleChange}
                   required
-                  className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm font-mono"
+                  disabled={!!initialData?.slug}
+                  className={`w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm font-mono ${initialData?.slug ? 'bg-gray-100 cursor-not-allowed text-gray-500' : ''}`}
                   placeholder="url-slug"
                 />
+                {initialData?.slug && (
+                  <p className="text-[10px] text-gray-400 mt-1">발행 후 슬러그 변경은 SEO 안정을 위해 금지됩니다.</p>
+                )}
               </div>
               <div>
                 <label className="block text-xs font-bold text-gray-500 mb-1 uppercase tracking-wider">허브 (Hub)</label>

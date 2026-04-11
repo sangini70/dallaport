@@ -34,7 +34,12 @@ export default function FlowSection({ language = 'ko' }: Props) {
   ];
 
   const categoryPosts = [...posts]
-    .filter(p => p.category === activeCategory || p.hubSlug === activeCategory);
+    .filter(p => p.category === activeCategory || p.hubSlug === activeCategory)
+    .sort((a, b) => {
+      const dateA = a.publishDate ? new Date(a.publishDate).getTime() : (a.createdAt?.toMillis?.() || 0);
+      const dateB = b.publishDate ? new Date(b.publishDate).getTime() : (b.createdAt?.toMillis?.() || 0);
+      return dateA - dateB; // Oldest first
+    });
 
   const basePath = isEn ? '/en/post' : '/post';
 

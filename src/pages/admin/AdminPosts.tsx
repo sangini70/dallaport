@@ -17,6 +17,8 @@ interface Post {
   naverStatus: IndexStatus;
   views: number;
   language?: string;
+  hubSlug?: string;
+  flowStep?: string;
 }
 
 export default function AdminPosts() {
@@ -42,6 +44,8 @@ export default function AdminPosts() {
           naverStatus: data.naverStatus || '미요청',
           views: data.views || 0,
           language: data.language || 'ko',
+          hubSlug: data.hubSlug || '',
+          flowStep: data.flowStep || '',
         });
       });
       setPosts(fetchedPosts);
@@ -149,6 +153,8 @@ export default function AdminPosts() {
           <thead className="bg-gray-50 border-b border-gray-200 text-gray-600">
             <tr>
               <th className="px-4 py-3 font-medium">TITLE</th>
+              <th className="px-4 py-3 font-medium">HUB</th>
+              <th className="px-4 py-3 font-medium">FLOW</th>
               <th className="px-4 py-3 font-medium">STATUS</th>
               <th className="px-4 py-3 font-medium">GOOGLE</th>
               <th className="px-4 py-3 font-medium">NAVER</th>
@@ -159,7 +165,7 @@ export default function AdminPosts() {
           <tbody className="divide-y divide-gray-100">
             {posts.length === 0 ? (
               <tr>
-                <td colSpan={6} className="px-4 py-8 text-center text-gray-500">
+                <td colSpan={8} className="px-4 py-8 text-center text-gray-500">
                   데이터 없음
                 </td>
               </tr>
@@ -171,6 +177,29 @@ export default function AdminPosts() {
                       <div className="font-bold text-gray-900 hover:text-blue-600">{post.title}</div>
                       <div className="text-xs text-gray-500 mt-0.5">/{post.slug}</div>
                     </Link>
+                  </td>
+                  <td className="px-4 py-3">
+                    <span className="text-xs font-medium px-2 py-1 bg-gray-100 text-gray-600 rounded">
+                      {post.hubSlug || '-'}
+                    </span>
+                  </td>
+                  <td className="px-4 py-3">
+                    <span className={`text-xs font-bold px-2 py-1 rounded ${
+                      post.flowStep === '1' ? 'bg-blue-50 text-blue-600' :
+                      post.flowStep === '2' ? 'bg-green-50 text-green-600' :
+                      post.flowStep === '3' ? 'bg-yellow-50 text-yellow-600' :
+                      post.flowStep === '4' ? 'bg-orange-50 text-orange-600' :
+                      post.flowStep === '5' ? 'bg-red-50 text-red-600' :
+                      'bg-gray-50 text-gray-400'
+                    }`}>
+                      {post.flowStep ? `${post.flowStep}: ${
+                        post.flowStep === '1' ? '입문' :
+                        post.flowStep === '2' ? '이해' :
+                        post.flowStep === '3' ? '비교' :
+                        post.flowStep === '4' ? '판단' :
+                        post.flowStep === '5' ? '실행' : ''
+                      }` : '-'}
+                    </span>
                   </td>
                   <td className="px-4 py-3">
                     <select 

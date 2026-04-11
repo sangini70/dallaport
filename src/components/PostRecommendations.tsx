@@ -10,6 +10,7 @@ interface Props {
 
 export default function PostRecommendations({ currentPost, language = 'ko' }: Props) {
   const [nextPost, setNextPost] = useState<Post | null>(null);
+  const [stepPosts, setStepPosts] = useState<Post[]>([]);
   const [popularInTopic, setPopularInTopic] = useState<Post[]>([]);
   const [relatedPosts, setRelatedPosts] = useState<Post[]>([]);
 
@@ -18,12 +19,18 @@ export default function PostRecommendations({ currentPost, language = 'ko' }: Pr
       const allPosts = await getPublishedPosts(language);
       
       const categoryPosts = allPosts
-        .filter(p => p.category === currentPost.category)
+        .filter(p => p.category === currentPost.category || (p.hubSlug && p.hubSlug === currentPost.hubSlug))
         .sort((a, b) => {
-          const dateA = a.createdAt?.toMillis?.() || 0;
-          const dateB = b.createdAt?.toMillis?.() || 0;
+          const dateA = a.publishDate ? new Date(a.publishDate).getTime() : (a.createdAt?.toMillis?.() || 0);
+          const dateB = b.publishDate ? new Date(b.publishDate).getTime() : (b.createdAt?.toMillis?.() || 0);
           return dateA - dateB;
         });
+
+      // Find other posts in the same step
+      if (currentPost.flowStep) {
+        const sameStep = categoryPosts.filter(p => p.flowStep === currentPost.flowStep && p.slug !== currentPost.slug);
+        setStepPosts(sameStep);
+      }
 
       const currentIndex = categoryPosts.findIndex(p => p.slug === currentPost.slug);
       if (currentIndex !== -1 && currentIndex < categoryPosts.length - 1) {
@@ -68,6 +75,29 @@ export default function PostRecommendations({ currentPost, language = 'ko' }: Pr
   return (
     <div className="mt-16 pt-12 border-t border-gray-200 flex flex-col gap-12">
       
+      {stepPosts.length > 0 && (
+        <section className="bg-blue-50/50 rounded-3xl p-8 border border-blue-100">
+          <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+            <span className="w-1.5 h-6 bg-blue-500 rounded-full"></span>
+            {isEn ? `More in Step ${currentPost.flowStep}` : `이 단계(${currentPost.flowStep}단계)의 다른 글`}
+          </h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {stepPosts.map((post) => (
+              <Link key={post.slug} to={`${basePath}/${post.slug}`} className="group flex items-center gap-4 bg-white p-4 rounded-2xl border border-gray-100 hover:border-blue-500 hover:shadow-sm transition-all">
+                <div className="w-16 h-16 rounded-xl overflow-hidden bg-gray-100 shrink-0">
+                  <img src={getThumbnail(post)} alt={post.title} className="w-full h-full object-cover" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h4 className="font-bold text-gray-900 line-clamp-1 group-hover:text-blue-600 transition-colors">{post.title}</h4>
+                  <p className="text-xs text-gray-500 mt-1 line-clamp-1">{getFallbackDescription(post)}</p>
+                </div>
+                <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-blue-500" />
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
+
       {nextPost && (
         <section>
           <div className="flex items-center gap-2 mb-4">
