@@ -16,6 +16,8 @@ export interface PostData {
   track?: string;
   views?: number;
   ctr?: number;
+  hubSlug?: string;
+  flowStep?: string;
 }
 
 export async function savePost(data: PostData) {

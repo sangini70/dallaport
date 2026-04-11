@@ -19,6 +19,8 @@ export default function AdminNewPost() {
         shortDescription: data.shortDescription,
         publishDate: data.publishDate,
         track: data.category,
+        hubSlug: data.hubSlug,
+        flowStep: data.flowStep,
       });
       alert('저장되었습니다.');
       navigate('/admin/posts');

@@ -20,10 +20,34 @@ export default function PostEditor({ initialData, onSave }: PostEditorProps) {
     seoDescription: initialData?.seoDescription || '',
     shortDescription: initialData?.shortDescription || '',
     publishDate: initialData?.publishDate || '',
+    hubSlug: initialData?.hubSlug || '',
+    flowStep: initialData?.flowStep || '',
   });
 
   const [showPreview, setShowPreview] = useState(false);
   const [previewContent, setPreviewContent] = useState('');
+
+  const recommendHubAndStep = () => {
+    const text = (formData.title + ' ' + formData.content).toLowerCase();
+    let recHub = '';
+    let recStep = '';
+
+    if (text.includes('etf')) recHub = 'etf';
+    else if (text.includes('환율')) recHub = 'exchange-rate';
+    else if (text.includes('달러')) recHub = 'dollar';
+    else if (text.includes('금리')) recHub = 'interest-rate';
+    else if (text.includes('경제')) recHub = 'economy-basics';
+
+    if (text.includes('입문') || text.includes('기초') || text.includes('시작')) recStep = '1';
+    else if (text.includes('이해') || text.includes('원리') || text.includes('구조')) recStep = '2';
+    else if (text.includes('비교') || text.includes('차이') || text.includes('장단점')) recStep = '3';
+    else if (text.includes('판단') || text.includes('전망') || text.includes('분석')) recStep = '4';
+    else if (text.includes('실행') || text.includes('투자') || text.includes('방법')) recStep = '5';
+
+    return { recHub, recStep };
+  };
+
+  const { recHub, recStep } = recommendHubAndStep();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -169,6 +193,44 @@ export default function PostEditor({ initialData, onSave }: PostEditorProps) {
                   className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm font-mono"
                   placeholder="url-slug"
                 />
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-gray-500 mb-1 uppercase tracking-wider">허브 (Hub)</label>
+                <select 
+                  name="hubSlug" 
+                  value={formData.hubSlug} 
+                  onChange={handleChange}
+                  className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm"
+                >
+                  <option value="">선택 안함</option>
+                  <option value="exchange-rate">환율 (Exchange Rate)</option>
+                  <option value="dollar">달러 (Dollar)</option>
+                  <option value="interest-rate">금리 (Interest Rate)</option>
+                  <option value="etf">ETF</option>
+                  <option value="economy-basics">경제 기초 (Economy Basics)</option>
+                </select>
+                {recHub && !formData.hubSlug && (
+                  <p className="text-[10px] text-blue-500 mt-1">추천 허브: {recHub}</p>
+                )}
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-gray-500 mb-1 uppercase tracking-wider">Flow 단계</label>
+                <select 
+                  name="flowStep" 
+                  value={formData.flowStep} 
+                  onChange={handleChange}
+                  className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm"
+                >
+                  <option value="">선택 안함</option>
+                  <option value="1">1: 입문</option>
+                  <option value="2">2: 이해</option>
+                  <option value="3">3: 비교</option>
+                  <option value="4">4: 판단</option>
+                  <option value="5">5: 실행</option>
+                </select>
+                {recStep && !formData.flowStep && (
+                  <p className="text-[10px] text-blue-500 mt-1">추천 단계: {recStep}</p>
+                )}
               </div>
               <div>
                 <label className="block text-xs font-bold text-gray-500 mb-1 uppercase tracking-wider">카테고리</label>

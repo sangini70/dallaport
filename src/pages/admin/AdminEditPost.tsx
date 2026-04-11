@@ -31,6 +31,8 @@ export default function AdminEditPost() {
             shortDescription: data.shortDescription || '',
             publishDate: data.publishDate || '',
             tags: data.tags || '',
+            hubSlug: data.hubSlug || '',
+            flowStep: data.flowStep || '',
           });
         } else {
           alert('Post not found');
@@ -59,6 +61,8 @@ export default function AdminEditPost() {
         shortDescription: data.shortDescription,
         publishDate: data.publishDate,
         track: data.category,
+        hubSlug: data.hubSlug,
+        flowStep: data.flowStep,
       });
       alert('수정되었습니다.');
       navigate('/admin/posts');
