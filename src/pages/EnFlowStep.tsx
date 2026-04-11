@@ -43,12 +43,27 @@ export default function EnFlowStep() {
   const domain = typeof window !== 'undefined' ? window.location.origin : 'https://dallaport.com';
 
   const metaDescription = getSeoDescription(post.seoDescription, post.shortDescription, post.contentHtml);
+  const ogImage = post.thumbnail || 'https://picsum.photos/seed/dallaport/1200/630';
 
   return (
     <article className="max-w-3xl mx-auto py-8 px-4">
       <Helmet>
         <title>{post.title} | Dallaport</title>
         <meta name="description" content={metaDescription} />
+        
+        {/* Open Graph */}
+        <meta property="og:title" content={`${post.title} | Dallaport`} />
+        <meta property="og:description" content={metaDescription} />
+        <meta property="og:image" content={ogImage} />
+        <meta property="og:url" content={`${domain}/en/post/${actualSlug}`} />
+        <meta property="og:type" content="article" />
+        
+        {/* Twitter */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={`${post.title} | Dallaport`} />
+        <meta name="twitter:description" content={metaDescription} />
+        <meta name="twitter:image" content={ogImage} />
+
         <link rel="alternate" hrefLang="ko" href={`${domain}/post/${actualSlug}`} />
         <link rel="alternate" hrefLang="en" href={`${domain}/en/post/${actualSlug}`} />
         <link rel="canonical" href={`${domain}/en/post/${actualSlug}`} />
@@ -58,6 +73,7 @@ export default function EnFlowStep() {
             "@type": "Article",
             "headline": post.title,
             "description": metaDescription,
+            "image": ogImage,
             "author": {
               "@type": "Organization",
               "name": "Dallaport"
@@ -84,7 +100,12 @@ export default function EnFlowStep() {
 
       {post.category === 'exchange-rate' && <CurrencyCalculator isEn={true} />}
 
-      <ShareButtons url={currentUrl} title={post.title} />
+      <ShareButtons 
+        url={currentUrl} 
+        title={post.title} 
+        description={post.shortDescription || metaDescription}
+        image={ogImage}
+      />
 
       <AdSlot position="bottom" />
 

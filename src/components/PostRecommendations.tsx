@@ -10,6 +10,7 @@ interface Props {
 
 export default function PostRecommendations({ currentPost, language = 'ko' }: Props) {
   const [nextPost, setNextPost] = useState<Post | null>(null);
+  const [prevPost, setPrevPost] = useState<Post | null>(null);
   const [stepPosts, setStepPosts] = useState<Post[]>([]);
   const [popularInTopic, setPopularInTopic] = useState<Post[]>([]);
   const [relatedPosts, setRelatedPosts] = useState<Post[]>([]);
@@ -33,10 +34,19 @@ export default function PostRecommendations({ currentPost, language = 'ko' }: Pr
       }
 
       const currentIndex = categoryPosts.findIndex(p => p.slug === currentPost.slug);
+      
+      // Next Post
       if (currentIndex !== -1 && currentIndex < categoryPosts.length - 1) {
         setNextPost(categoryPosts[currentIndex + 1]);
       } else {
         setNextPost(null);
+      }
+
+      // Previous Post
+      if (currentIndex > 0) {
+        setPrevPost(categoryPosts[currentIndex - 1]);
+      } else {
+        setPrevPost(null);
       }
 
       const popular = [...categoryPosts]
@@ -114,6 +124,29 @@ export default function PostRecommendations({ currentPost, language = 'ko' }: Pr
                 <p className="text-gray-600 line-clamp-2 mb-4">{getFallbackDescription(nextPost)}</p>
                 <div className="flex items-center text-blue-600 font-bold text-sm gap-1">
                   {isEn ? 'Continue Reading' : '이어서 읽기'} <ChevronRight className="w-4 h-4" />
+                </div>
+              </div>
+            </div>
+          </Link>
+        </section>
+      )}
+
+      {prevPost && (
+        <section>
+          <div className="flex items-center gap-2 mb-4">
+            <span className="bg-gray-100 text-gray-700 text-xs font-bold px-2 py-1 rounded">PREV</span>
+            <h3 className="text-xl font-bold text-gray-900">{isEn ? 'Previous Step' : '이전 단계로 돌아가기'}</h3>
+          </div>
+          <Link to={`${basePath}/${prevPost.slug}`} className="group block bg-white rounded-2xl p-6 border border-gray-100 hover:border-gray-400 hover:shadow-md transition-all">
+            <div className="flex flex-col md:flex-row gap-6 items-center opacity-70 group-hover:opacity-100 transition-opacity">
+              <div className="w-full md:w-1/3 aspect-[16/9] rounded-xl overflow-hidden bg-gray-200 shrink-0">
+                <img src={getThumbnail(prevPost)} alt={prevPost.title} className="w-full h-full object-cover" />
+              </div>
+              <div className="flex-1">
+                <h4 className="text-xl font-bold text-gray-900 mb-2">{prevPost.title}</h4>
+                <p className="text-gray-600 text-sm line-clamp-2 mb-4">{getFallbackDescription(prevPost)}</p>
+                <div className="flex items-center text-gray-500 font-bold text-sm gap-1">
+                  <ChevronRight className="w-4 h-4 rotate-180" /> {isEn ? 'Back to Previous' : '이전으로 돌아가기'}
                 </div>
               </div>
             </div>
