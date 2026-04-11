@@ -41,7 +41,7 @@ export default function FlowSection({ language = 'ko' }: Props) {
       return dateA - dateB; // Oldest first
     });
 
-  const basePath = isEn ? '/en/post' : '/post';
+  const basePath = isEn ? '/en' : '';
 
   return (
     <section>

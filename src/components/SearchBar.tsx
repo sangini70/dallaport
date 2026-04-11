@@ -58,7 +58,7 @@ export default function SearchBar({ language = 'ko' }: Props) {
   };
 
   const handleResultClick = (slug: string) => {
-    navigate(language === 'ko' ? `/post/${slug}` : `/en/post/${slug}`);
+    navigate(language === 'ko' ? `/${slug}` : `/en/${slug}`);
     setIsOpen(false);
     setQuery('');
   };

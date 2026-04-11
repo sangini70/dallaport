@@ -71,7 +71,7 @@ export default function EnCategoryPage() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-y-10 gap-x-6">
           {posts.map((post) => (
-            <Link key={post.id} to={`/en/post/${post.slug}`} className="group block">
+            <Link key={post.id} to={`/en/${post.slug}`} className="group block">
               <div className="aspect-[4/3] rounded-2xl overflow-hidden mb-4 bg-gray-200">
                 <img src={getThumbnail(post)} alt={post.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
               </div>

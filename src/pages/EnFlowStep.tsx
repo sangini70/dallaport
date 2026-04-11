@@ -57,7 +57,7 @@ export default function EnFlowStep() {
         <meta property="og:title" content={`${post.title} | Dallaport`} />
         <meta property="og:description" content={metaDescription} />
         <meta property="og:image" content={ogImage} />
-        <meta property="og:url" content={`${domain}/en/post/${actualSlug}`} />
+        <meta property="og:url" content={`${domain}/en/${actualSlug}`} />
         <meta property="og:type" content="article" />
         
         {/* Twitter */}
@@ -66,9 +66,9 @@ export default function EnFlowStep() {
         <meta name="twitter:description" content={metaDescription} />
         <meta name="twitter:image" content={ogImage} />
 
-        <link rel="alternate" hrefLang="ko" href={`${domain}/post/${actualSlug}`} />
-        <link rel="alternate" hrefLang="en" href={`${domain}/en/post/${actualSlug}`} />
-        <link rel="canonical" href={`${domain}/en/post/${actualSlug}`} />
+        <link rel="alternate" hrefLang="ko" href={`${domain}/${actualSlug}`} />
+        <link rel="alternate" hrefLang="en" href={`${domain}/en/${actualSlug}`} />
+        <link rel="canonical" href={`${domain}/en/${actualSlug}`} />
         <script type="application/ld+json">
           {JSON.stringify({
             "@context": "https://schema.org",

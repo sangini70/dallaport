@@ -72,7 +72,7 @@ export default function EnFlowMap() {
                       <div className="absolute -left-6 top-4 w-6 h-0.5 bg-gray-200"></div>
                       
                       <Link 
-                        to={`/en/post/${post.slug}`}
+                        to={`/en/${post.slug}`}
                         className="block bg-white p-4 rounded-xl border border-gray-200 hover:border-blue-500 hover:shadow-md transition-all group"
                       >
                         <div className="flex items-center gap-3">
@@ -83,7 +83,7 @@ export default function EnFlowMap() {
                             <h3 className="font-bold text-gray-900 group-hover:text-blue-600 transition-colors capitalize">
                               {post.title}
                             </h3>
-                            <p className="text-xs text-gray-500 mt-1">/en/post/{post.slug}</p>
+                            <p className="text-xs text-gray-500 mt-1">/en/{post.slug}</p>
                           </div>
                         </div>
                       </Link>

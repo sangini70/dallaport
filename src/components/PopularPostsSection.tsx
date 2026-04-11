@@ -64,7 +64,7 @@ export default function PopularPostsSection({ language = 'ko' }: Props) {
 
   if (posts.length === 0) return null;
 
-  const basePath = isEn ? '/en/post' : '/post';
+  const basePath = isEn ? '/en' : '';
 
   return (
     <section>

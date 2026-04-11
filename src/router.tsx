@@ -1,4 +1,4 @@
-import { createBrowserRouter } from 'react-router-dom';
+import { createBrowserRouter, Navigate, useParams } from 'react-router-dom';
 import PublicLayout from './layouts/PublicLayout';
 import AdminLayout from './layouts/AdminLayout';
 import Home from './pages/Home';
@@ -26,6 +26,11 @@ import AdminSettings from './pages/admin/AdminSettings';
 import AdminLogin from './pages/admin/AdminLogin';
 import ProtectedAdminRoute from './components/admin/ProtectedAdminRoute';
 
+const PostRedirect = ({ lang = 'ko' }: { lang?: string }) => {
+  const { slug } = useParams();
+  return <Navigate to={lang === 'en' ? `/en/${slug}` : `/${slug}`} replace />;
+};
+
 export const router = createBrowserRouter([
   {
     path: '/',
@@ -38,14 +43,16 @@ export const router = createBrowserRouter([
       { path: 'contact', element: <Contact /> },
       { path: 'privacy', element: <Privacy /> },
       { path: 'category/:categoryId', element: <CategoryPage /> },
-      { path: 'post/:slug', element: <FlowStep /> },
+      { path: 'post/:slug', element: <PostRedirect /> },
       { path: 'en', element: <EnHome /> },
       { path: 'en/flow-map', element: <EnFlowMap /> },
       { path: 'en/search', element: <EnSearch /> },
       { path: 'en/contact', element: <EnContact /> },
       { path: 'en/privacy', element: <EnPrivacy /> },
       { path: 'en/category/:categoryId', element: <EnCategoryPage /> },
-      { path: 'en/post/:slug', element: <EnFlowStep /> },
+      { path: 'en/post/:slug', element: <PostRedirect lang="en" /> },
+      { path: 'en/:slug', element: <EnFlowStep /> },
+      { path: ':slug', element: <FlowStep /> },
     ],
   },
   {

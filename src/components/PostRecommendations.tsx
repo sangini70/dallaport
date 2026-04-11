@@ -80,7 +80,7 @@ export default function PostRecommendations({ currentPost, language = 'ko' }: Pr
   };
 
   const isEn = language === 'en';
-  const basePath = isEn ? '/en/post' : '/post';
+  const basePath = isEn ? '/en' : '';
 
   return (
     <div className="mt-16 pt-12 border-t border-gray-200 flex flex-col gap-12">

@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Share2, Link as LinkIcon } from 'lucide-react';
+import { Share2, Link as LinkIcon, Facebook } from 'lucide-react';
 
 declare global {
   interface Window {
@@ -23,20 +23,14 @@ export default function ShareButtons({ url, title, description, image }: ShareBu
     : url;
 
   useEffect(() => {
-    console.log("Kakao SDK initial check:", typeof window.Kakao);
-    
     const initKakao = () => {
       if (window.Kakao) {
         if (!window.Kakao.isInitialized()) {
-          console.log("Initializing Kakao with key:", KAKAO_JS_KEY);
           try {
             window.Kakao.init(KAKAO_JS_KEY);
-            console.log("Kakao initialized successfully:", window.Kakao.isInitialized());
           } catch (e) {
             console.error("Kakao init error:", e);
           }
-        } else {
-          console.log("Kakao already initialized");
         }
         return true;
       }
@@ -44,16 +38,11 @@ export default function ShareButtons({ url, title, description, image }: ShareBu
     };
 
     if (!initKakao()) {
-      // If not found, poll for a few seconds
       let attempts = 0;
       const interval = setInterval(() => {
         attempts++;
-        console.log(`Retrying Kakao init (attempt ${attempts})...`);
         if (initKakao() || attempts >= 10) {
           clearInterval(interval);
-          if (attempts >= 10 && !window.Kakao) {
-            console.warn("Kakao SDK failed to load after 10 attempts");
-          }
         }
       }, 500);
       return () => clearInterval(interval);
@@ -66,39 +55,16 @@ export default function ShareButtons({ url, title, description, image }: ShareBu
   };
 
   const handleKakaoShare = () => {
-    console.log("kakao button clicked");
-    console.log("kakao share start");
-    console.log("window.Kakao:", window.Kakao);
-    
-    if (!window.Kakao) {
-      console.error("Kakao SDK not loaded");
-      alert("카카오 SDK가 로드되지 않았습니다. 잠시 후 다시 시도해주세요.");
-      return;
-    }
-
-    const isInitialized = window.Kakao.isInitialized();
-    console.log("isInitialized():", isInitialized);
-
-    if (!isInitialized) {
-      console.log("Attempting late initialization...");
+    if (!window.Kakao || !window.Kakao.isInitialized()) {
       try {
         window.Kakao.init(KAKAO_JS_KEY);
-        console.log("Late initialization success:", window.Kakao.isInitialized());
       } catch (e) {
-        console.error("Late initialization failed:", e);
+        alert("카카오 공유를 초기화할 수 없습니다.");
         return;
       }
     }
 
     try {
-      console.log("before sendDefault");
-      console.log("Payload:", {
-        title,
-        description: description || '딸라포트에서 환율과 달러의 구조를 배워보세요.',
-        imageUrl: image || 'https://picsum.photos/seed/dallaport/800/600',
-        shareUrl
-      });
-
       window.Kakao.Share.sendDefault({
         objectType: 'feed',
         content: {
@@ -120,10 +86,8 @@ export default function ShareButtons({ url, title, description, image }: ShareBu
           },
         ],
       });
-      console.log("sendDefault called successfully");
     } catch (e) {
       console.error("kakao share error", e);
-      alert("카카오 공유 중 오류가 발생했습니다.");
     }
   };
 
@@ -137,38 +101,49 @@ export default function ShareButtons({ url, title, description, image }: ShareBu
     window.open(fbUrl, '_blank', 'width=600,height=400');
   };
 
+  const btnBaseClass = "flex items-center justify-center rounded-full transition-all duration-200 hover:scale-110 hover:shadow-md active:scale-95 active:translate-y-0.5 cursor-pointer";
+
   return (
-    <div className="flex items-center gap-2 py-4 border-t border-b border-gray-100 my-6">
-      <span className="text-sm text-gray-500 flex items-center gap-1 mr-2">
-        <Share2 className="w-4 h-4" /> 공유하기
+    <div className="flex items-center gap-3 py-6 border-t border-b border-gray-100 my-8">
+      <span className="text-sm font-bold text-gray-400 flex items-center gap-1.5 mr-2 uppercase tracking-wider">
+        <Share2 className="w-4 h-4" /> Share
       </span>
+      
       <button 
         onClick={handleCopyLink} 
-        className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600 transition-colors" 
-        title="링크 복사"
+        className={`${btnBaseClass} w-10 h-10 bg-gray-100 text-gray-600 hover:bg-gray-200`}
+        title="Copy Link"
       >
         <LinkIcon className="w-4 h-4" />
       </button>
       
       <button 
         onClick={handleKakaoShare}
-        className="px-3 py-1.5 rounded-full bg-[#FEE500] text-[#000000] text-xs font-bold hover:bg-[#FEE500]/90 transition-colors"
+        className={`${btnBaseClass} px-4 h-10 bg-[#FEE500] text-[#000000] text-xs font-bold hover:bg-[#FEE500]/90`}
+        title="Share on Kakao"
       >
+        <svg viewBox="0 0 24 24" className="w-4 h-4 fill-current mr-1.5">
+          <path d="M12 3c-4.97 0-9 3.185-9 7.115 0 2.558 1.707 4.8 4.34 6.054l-.81 2.976c-.05.178.05.346.21.346.07 0 .14-.02.2-.07l3.48-2.34c.51.05 1.04.08 1.58.08 4.97 0 9-3.185 9-7.115S16.97 3 12 3z" />
+        </svg>
         카카오
       </button>
       
       <button 
         onClick={handleXShare}
-        className="px-3 py-1.5 rounded-full bg-black text-white text-xs font-bold hover:bg-black/90 transition-colors"
+        className={`${btnBaseClass} w-10 h-10 bg-black text-white hover:bg-black/80`}
+        title="Share on X"
       >
-        X
+        <svg viewBox="0 0 24 24" className="w-4 h-4 fill-current">
+          <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+        </svg>
       </button>
       
       <button 
         onClick={handleFacebookShare}
-        className="px-3 py-1.5 rounded-full bg-[#1877F2] text-white text-xs font-bold hover:bg-[#1877F2]/90 transition-colors"
+        className={`${btnBaseClass} w-10 h-10 bg-[#1877F2] text-white hover:bg-[#1877F2]/90`}
+        title="Share on Facebook"
       >
-        페이스북
+        <Facebook className="w-4 h-4 fill-current" />
       </button>
     </div>
   );

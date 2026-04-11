@@ -57,7 +57,7 @@ export default function FlowStep() {
         <meta property="og:title" content={`${post.title} | 딸라포트`} />
         <meta property="og:description" content={metaDescription} />
         <meta property="og:image" content={ogImage} />
-        <meta property="og:url" content={`${domain}/post/${actualSlug}`} />
+        <meta property="og:url" content={`${domain}/${actualSlug}`} />
         <meta property="og:type" content="article" />
         
         {/* Twitter */}
@@ -66,9 +66,9 @@ export default function FlowStep() {
         <meta name="twitter:description" content={metaDescription} />
         <meta name="twitter:image" content={ogImage} />
 
-        <link rel="alternate" hrefLang="ko" href={`${domain}/post/${actualSlug}`} />
-        <link rel="alternate" hrefLang="en" href={`${domain}/en/post/${actualSlug}`} />
-        <link rel="canonical" href={`${domain}/post/${actualSlug}`} />
+        <link rel="alternate" hrefLang="ko" href={`${domain}/${actualSlug}`} />
+        <link rel="alternate" hrefLang="en" href={`${domain}/en/${actualSlug}`} />
+        <link rel="canonical" href={`${domain}/${actualSlug}`} />
         <script type="application/ld+json">
           {JSON.stringify({
             "@context": "https://schema.org",

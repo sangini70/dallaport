@@ -92,7 +92,7 @@ export default function Search() {
             {results.map((item) => (
               <Link 
                 key={item.slug} 
-                to={`/post/${item.slug}`}
+                to={`/${item.slug}`}
                 className="block p-6 bg-white border border-gray-200 rounded-2xl hover:border-blue-500 hover:shadow-md transition-all"
               >
                 <div className="text-xs font-bold text-blue-600 mb-2 uppercase">{getCategoryName(item.category)}</div>
