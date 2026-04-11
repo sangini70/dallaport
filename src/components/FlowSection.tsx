@@ -34,12 +34,7 @@ export default function FlowSection({ language = 'ko' }: Props) {
   ];
 
   const categoryPosts = [...posts]
-    .filter(p => p.category === activeCategory)
-    .sort((a, b) => {
-      const dateA = a.createdAt?.toMillis?.() || 0;
-      const dateB = b.createdAt?.toMillis?.() || 0;
-      return dateA - dateB;
-    });
+    .filter(p => p.category === activeCategory || p.hubSlug === activeCategory);
 
   const basePath = isEn ? '/en/post' : '/post';
 
@@ -71,7 +66,10 @@ export default function FlowSection({ language = 'ko' }: Props) {
           <div className="hidden md:block absolute top-1/2 left-0 w-full h-0.5 bg-gray-100 -translate-y-1/2 z-0"></div>
           
           {STEPS.map((stepName, index) => {
-            const post = categoryPosts[index];
+            const stepNumber = (index + 1).toString();
+            // Find post that matches this specific flow step
+            const post = categoryPosts.find(p => p.flowStep === stepNumber);
+            
             return (
               <div key={stepName} className="flex-1 relative z-10 flex flex-col">
                 <div className="flex items-center gap-3 mb-3 md:justify-center">

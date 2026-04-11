@@ -7,12 +7,15 @@ import FlowStep from './pages/FlowStep';
 import Search from './pages/Search';
 import About from './pages/About';
 import Contact from './pages/Contact';
+import Privacy from './pages/Privacy';
 import CategoryPage from './pages/CategoryPage';
 import EnHome from './pages/EnHome';
 import EnFlowMap from './pages/EnFlowMap';
 import EnFlowStep from './pages/EnFlowStep';
 import EnSearch from './pages/EnSearch';
 import EnCategoryPage from './pages/EnCategoryPage';
+import EnPrivacy from './pages/EnPrivacy';
+import EnContact from './pages/EnContact';
 import AdminHome from './pages/admin/AdminHome';
 import AdminPosts from './pages/admin/AdminPosts';
 import AdminNewPost from './pages/admin/AdminNewPost';
@@ -33,11 +36,14 @@ export const router = createBrowserRouter([
       { path: 'search', element: <Search /> },
       { path: 'about', element: <About /> },
       { path: 'contact', element: <Contact /> },
+      { path: 'privacy', element: <Privacy /> },
       { path: 'category/:categoryId', element: <CategoryPage /> },
       { path: 'post/:slug', element: <FlowStep /> },
       { path: 'en', element: <EnHome /> },
       { path: 'en/flow-map', element: <EnFlowMap /> },
       { path: 'en/search', element: <EnSearch /> },
+      { path: 'en/contact', element: <EnContact /> },
+      { path: 'en/privacy', element: <EnPrivacy /> },
       { path: 'en/category/:categoryId', element: <EnCategoryPage /> },
       { path: 'en/post/:slug', element: <EnFlowStep /> },
     ],

@@ -1,14 +1,14 @@
 import { Helmet } from 'react-helmet-async';
 import { Mail, MessageSquare } from 'lucide-react';
 
-export default function Contact() {
+export default function EnContact() {
   return (
     <div className="max-w-3xl mx-auto py-12 px-4">
       <Helmet>
-        <title>Contact | 딸라포트</title>
+        <title>Contact | dallaport</title>
       </Helmet>
       
-      <h1 className="text-3xl font-bold mb-8">문의하기</h1>
+      <h1 className="text-3xl font-bold mb-8">Contact Us</h1>
       
       <div className="bg-white rounded-3xl border border-gray-200 p-8 md:p-12 shadow-sm">
         <div className="flex flex-col items-center text-center max-w-md mx-auto">
@@ -16,9 +16,9 @@ export default function Contact() {
             <Mail className="w-8 h-8 text-blue-600" />
           </div>
           
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">궁금한 점이 있으신가요?</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">Have any questions?</h2>
           <p className="text-gray-600 mb-8 leading-relaxed">
-            환율, 금리, 달러 투자 등 서비스 이용과 관련된 문의나 제안이 있으시면 아래 이메일로 보내주세요. 확인 후 정성껏 답변해 드리겠습니다.
+            If you have any inquiries or suggestions related to the use of our services, such as exchange rates, interest rates, or dollar investments, please send them to the email below. We will respond carefully after checking.
           </p>
           
           <div className="w-full bg-gray-50 rounded-2xl p-6 border border-gray-100 mb-8">
@@ -30,7 +30,7 @@ export default function Contact() {
           
           <div className="flex items-center gap-2 text-sm text-gray-500">
             <MessageSquare className="w-4 h-4" />
-            <span>보통 1~2일 내에 답변을 드립니다.</span>
+            <span>We usually respond within 1-2 business days.</span>
           </div>
         </div>
       </div>

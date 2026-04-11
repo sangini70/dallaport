@@ -17,6 +17,8 @@ export interface Post {
   views: number;
   thumbnail?: string;
   tags?: string;
+  flowStep?: string;
+  hubSlug?: string;
 }
 
 export async function getPublishedPosts(lang: string = 'ko'): Promise<Post[]> {
