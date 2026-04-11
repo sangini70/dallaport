@@ -32,7 +32,7 @@ export default function CleanHtmlButton({ content, onClean }: CleanHtmlButtonPro
       className="flex items-center gap-1 text-xs font-medium text-blue-600 hover:text-blue-800 bg-blue-50 px-2 py-1 rounded"
     >
       <Wand2 className="w-3 h-3" />
-      Clean HTML
+      Clean HTML & Extract Scripts
     </button>
   );
 }

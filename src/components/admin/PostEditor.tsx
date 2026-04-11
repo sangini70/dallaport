@@ -1,11 +1,28 @@
-import { useState } from 'react';
-import { Eye, Save, X } from 'lucide-react';
+import { useState, useRef, useEffect } from 'react';
+import { Eye, Save, X, Wand2 } from 'lucide-react';
+import ReactQuill from 'react-quill-new';
+import 'react-quill-new/dist/quill.snow.css';
+import TurndownService from 'turndown';
+import { marked } from 'marked';
 import CleanHtmlButton from './CleanHtmlButton';
+
+const turndownService = new TurndownService({
+  headingStyle: 'atx',
+  codeBlockStyle: 'fenced'
+});
+
+// Custom marked options to ensure clean HTML
+marked.setOptions({
+  breaks: true,
+  gfm: true
+});
 
 interface PostEditorProps {
   initialData?: any;
   onSave: (data: any) => void;
 }
+
+type EditorMode = 'basic' | 'markdown' | 'html';
 
 export default function PostEditor({ initialData, onSave }: PostEditorProps) {
   const [formData, setFormData] = useState({
@@ -25,8 +42,49 @@ export default function PostEditor({ initialData, onSave }: PostEditorProps) {
     thumbnail: initialData?.thumbnail || '',
   });
 
+  const [mode, setMode] = useState<EditorMode>('html');
+  const [markdownContent, setMarkdownContent] = useState('');
   const [showPreview, setShowPreview] = useState(false);
   const [previewContent, setPreviewContent] = useState('');
+  
+  const quillRef = useRef<any>(null);
+
+  // Initialize markdown if starting in markdown mode or when content changes
+  useEffect(() => {
+    if (mode === 'markdown' && !markdownContent && formData.content) {
+      setMarkdownContent(turndownService.turndown(formData.content));
+    }
+  }, [mode, formData.content]);
+
+  const handleModeChange = (newMode: EditorMode) => {
+    if (mode === newMode) return;
+
+    let newContent = formData.content;
+    let newMarkdown = markdownContent;
+
+    if (mode === 'markdown') {
+      // Sync from markdown to HTML before switching
+      newContent = marked.parse(markdownContent) as string;
+    } else if (newMode === 'markdown') {
+      // Sync from HTML to markdown when switching to markdown
+      newMarkdown = turndownService.turndown(formData.content);
+    }
+
+    setFormData(prev => ({ ...prev, content: newContent }));
+    setMarkdownContent(newMarkdown);
+    setMode(newMode);
+  };
+
+  const handleQuillChange = (content: string) => {
+    setFormData(prev => ({ ...prev, content }));
+  };
+
+  const handleMarkdownChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const val = e.target.value;
+    setMarkdownContent(val);
+    // We don't sync to HTML on every keystroke for performance, 
+    // but we should sync when saving or switching modes.
+  };
 
   const recommendHubAndStep = () => {
     const text = (formData.title + ' ' + formData.content).toLowerCase();
@@ -64,7 +122,11 @@ export default function PostEditor({ initialData, onSave }: PostEditorProps) {
   };
 
   const handlePreview = () => {
-    const cleaned = cleanHtml(formData.content);
+    let cleaned = formData.content;
+    if (mode === 'markdown') {
+      cleaned = marked.parse(markdownContent) as string;
+    }
+    cleaned = cleanHtml(cleaned);
     setFormData(prev => ({ ...prev, content: cleaned }));
     setPreviewContent(cleaned);
     setShowPreview(true);
@@ -73,6 +135,11 @@ export default function PostEditor({ initialData, onSave }: PostEditorProps) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
+    let finalContent = formData.content;
+    if (mode === 'markdown') {
+      finalContent = marked.parse(markdownContent) as string;
+    }
+
     // Auto-assign publishDate if empty
     let finalPublishDate = formData.publishDate;
     if (!finalPublishDate) {
@@ -101,7 +168,19 @@ export default function PostEditor({ initialData, onSave }: PostEditorProps) {
       }
     }
 
-    onSave({ ...formData, publishDate: finalPublishDate });
+    onSave({ ...formData, content: finalContent, publishDate: finalPublishDate });
+  };
+
+  const quillModules = {
+    toolbar: [
+      ['bold'],
+      ['code-block'],
+      [{ 'header': 2 }, { 'header': 3 }],
+      [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+      [{ 'align': [] }],
+      ['link'],
+      ['clean']
+    ],
   };
 
   return (
@@ -121,18 +200,82 @@ export default function PostEditor({ initialData, onSave }: PostEditorProps) {
             />
             
             <div className="mt-6">
-              <div className="flex items-center justify-between mb-2">
-                <label className="block text-sm font-bold text-gray-700">본문 (HTML)</label>
-                <CleanHtmlButton content={formData.content} onClean={(cleaned) => setFormData(prev => ({ ...prev, content: cleaned }))} />
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-4">
+                  <label className="block text-sm font-bold text-gray-700">본문 편집</label>
+                  <div className="flex bg-gray-100 p-1 rounded-lg">
+                    <button 
+                      type="button"
+                      onClick={() => handleModeChange('basic')}
+                      className={`px-3 py-1 text-xs font-bold rounded-md transition-all ${mode === 'basic' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
+                    >
+                      기본모드
+                    </button>
+                    <button 
+                      type="button"
+                      onClick={() => handleModeChange('markdown')}
+                      className={`px-3 py-1 text-xs font-bold rounded-md transition-all ${mode === 'markdown' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
+                    >
+                      마크다운
+                    </button>
+                    <button 
+                      type="button"
+                      onClick={() => handleModeChange('html')}
+                      className={`px-3 py-1 text-xs font-bold rounded-md transition-all ${mode === 'html' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
+                    >
+                      HTML
+                    </button>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <CleanHtmlButton 
+                    content={mode === 'markdown' ? marked.parse(markdownContent) as string : formData.content} 
+                    onClean={(cleaned) => {
+                      if (mode === 'markdown') {
+                        setMarkdownContent(turndownService.turndown(cleaned));
+                      } else {
+                        setFormData(prev => ({ ...prev, content: cleaned }));
+                      }
+                    }} 
+                  />
+                </div>
               </div>
-              <textarea 
-                name="content" 
-                value={formData.content} 
-                onChange={handleChange}
-                rows={25}
-                className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none font-mono text-sm leading-relaxed bg-gray-50"
-                placeholder="HTML 코드를 여기에 붙여넣으세요..."
-              />
+
+              <div className="min-h-[600px] border border-gray-200 rounded-xl overflow-hidden">
+                {mode === 'basic' && (
+                  <div className="quill-wrapper">
+                    <ReactQuill 
+                      ref={quillRef}
+                      theme="snow"
+                      value={formData.content}
+                      onChange={handleQuillChange}
+                      modules={quillModules}
+                      className="h-[600px]"
+                    />
+                  </div>
+                )}
+                
+                {mode === 'markdown' && (
+                  <textarea 
+                    value={markdownContent} 
+                    onChange={handleMarkdownChange}
+                    rows={25}
+                    className="w-full h-[600px] p-6 border-0 focus:ring-0 outline-none font-mono text-sm leading-relaxed bg-gray-50 resize-none"
+                    placeholder="마크다운 형식을 입력하세요..."
+                  />
+                )}
+
+                {mode === 'html' && (
+                  <textarea 
+                    name="content" 
+                    value={formData.content} 
+                    onChange={handleChange}
+                    rows={25}
+                    className="w-full h-[600px] p-6 border-0 focus:ring-0 outline-none font-mono text-sm leading-relaxed bg-gray-900 text-blue-100 resize-none"
+                    placeholder="HTML 코드를 여기에 입력하세요..."
+                  />
+                )}
+              </div>
             </div>
           </div>
         </div>
