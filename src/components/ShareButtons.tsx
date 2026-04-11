@@ -111,39 +111,38 @@ export default function ShareButtons({ url, title, description, image }: ShareBu
       
       <button 
         onClick={handleCopyLink} 
-        className={`${btnBaseClass} w-10 h-10 bg-gray-100 text-gray-600 hover:bg-gray-200`}
+        className={`${btnBaseClass} w-11 h-11 bg-gray-100 text-gray-600 hover:bg-gray-200`}
         title="Copy Link"
       >
-        <LinkIcon className="w-4 h-4" />
+        <LinkIcon className="w-[22px] h-[22px]" />
       </button>
       
       <button 
         onClick={handleKakaoShare}
-        className={`${btnBaseClass} px-4 h-10 bg-[#FEE500] text-[#000000] text-xs font-bold hover:bg-[#FEE500]/90`}
+        className={`${btnBaseClass} w-11 h-11 bg-[#FEE500] text-[#000000] hover:bg-[#FEE500]/90`}
         title="Share on Kakao"
       >
-        <svg viewBox="0 0 24 24" className="w-4 h-4 fill-current mr-1.5">
+        <svg viewBox="0 0 24 24" className="w-[22px] h-[22px] fill-current">
           <path d="M12 3c-4.97 0-9 3.185-9 7.115 0 2.558 1.707 4.8 4.34 6.054l-.81 2.976c-.05.178.05.346.21.346.07 0 .14-.02.2-.07l3.48-2.34c.51.05 1.04.08 1.58.08 4.97 0 9-3.185 9-7.115S16.97 3 12 3z" />
         </svg>
-        카카오
       </button>
       
       <button 
         onClick={handleXShare}
-        className={`${btnBaseClass} w-10 h-10 bg-black text-white hover:bg-black/80`}
+        className={`${btnBaseClass} w-11 h-11 bg-black text-white hover:bg-black/80`}
         title="Share on X"
       >
-        <svg viewBox="0 0 24 24" className="w-4 h-4 fill-current">
+        <svg viewBox="0 0 24 24" className="w-[22px] h-[22px] fill-current">
           <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
         </svg>
       </button>
       
       <button 
         onClick={handleFacebookShare}
-        className={`${btnBaseClass} w-10 h-10 bg-[#1877F2] text-white hover:bg-[#1877F2]/90`}
+        className={`${btnBaseClass} w-11 h-11 bg-[#1877F2] text-white hover:bg-[#1877F2]/90`}
         title="Share on Facebook"
       >
-        <Facebook className="w-4 h-4 fill-current" />
+        <Facebook className="w-[22px] h-[22px] fill-current scale-110" />
       </button>
     </div>
   );
