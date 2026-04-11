@@ -22,6 +22,7 @@ export default function PostEditor({ initialData, onSave }: PostEditorProps) {
     publishDate: initialData?.publishDate || '',
     hubSlug: initialData?.hubSlug || '',
     flowStep: initialData?.flowStep || '',
+    thumbnail: initialData?.thumbnail || '',
   });
 
   const [showPreview, setShowPreview] = useState(false);
@@ -274,6 +275,17 @@ export default function PostEditor({ initialData, onSave }: PostEditorProps) {
                   onChange={handleChange}
                   className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm"
                   placeholder="쉼표로 구분"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-gray-500 mb-1 uppercase tracking-wider">Thumbnail URL</label>
+                <input 
+                  type="text" 
+                  name="thumbnail" 
+                  value={formData.thumbnail} 
+                  onChange={handleChange}
+                  className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm font-mono"
+                  placeholder="https://..."
                 />
               </div>
             </div>

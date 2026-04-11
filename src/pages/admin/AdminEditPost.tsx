@@ -33,6 +33,7 @@ export default function AdminEditPost() {
             tags: data.tags || '',
             hubSlug: data.hubSlug || '',
             flowStep: data.flowStep || '',
+            thumbnail: data.thumbnail || '',
           });
         } else {
           alert('Post not found');
@@ -63,6 +64,7 @@ export default function AdminEditPost() {
         track: data.category,
         hubSlug: data.hubSlug,
         flowStep: data.flowStep,
+        thumbnail: data.thumbnail,
       });
       alert('수정되었습니다.');
       navigate('/admin/posts');

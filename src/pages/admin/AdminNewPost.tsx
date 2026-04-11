@@ -21,6 +21,7 @@ export default function AdminNewPost() {
         track: data.category,
         hubSlug: data.hubSlug,
         flowStep: data.flowStep,
+        thumbnail: data.thumbnail,
       });
       alert('저장되었습니다.');
       navigate('/admin/posts');

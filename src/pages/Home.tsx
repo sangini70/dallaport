@@ -6,6 +6,7 @@ import { getPublishedPosts, Post } from '../services/posts';
 import SearchBar from '../components/SearchBar';
 import FlowSection from '../components/FlowSection';
 import PopularPostsSection from '../components/PopularPostsSection';
+import YoutubeAwareness from '../components/YoutubeAwareness';
 
 export default function Home() {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -78,6 +79,10 @@ export default function Home() {
         
         <SearchBar language="ko" />
       </section>
+
+      <div className="-mt-8">
+        <YoutubeAwareness language="ko" />
+      </div>
 
       <FlowSection language="ko" />
 

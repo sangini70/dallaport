@@ -5,6 +5,7 @@ import { getPublishedPosts, Post } from '../services/posts';
 import SearchBar from '../components/SearchBar';
 import FlowSection from '../components/FlowSection';
 import PopularPostsSection from '../components/PopularPostsSection';
+import YoutubeAwareness from '../components/YoutubeAwareness';
 
 export default function EnHome() {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -77,6 +78,10 @@ export default function EnHome() {
         
         <SearchBar language="en" />
       </section>
+
+      <div className="-mt-8">
+        <YoutubeAwareness language="en" />
+      </div>
 
       <FlowSection language="en" />
 
