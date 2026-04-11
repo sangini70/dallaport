@@ -16,6 +16,8 @@ import EnSearch from './pages/EnSearch';
 import EnCategoryPage from './pages/EnCategoryPage';
 import EnPrivacy from './pages/EnPrivacy';
 import EnContact from './pages/EnContact';
+import CalculatorPage from './pages/CalculatorPage';
+import EnCalculatorPage from './pages/EnCalculatorPage';
 import AdminHome from './pages/admin/AdminHome';
 import AdminPosts from './pages/admin/AdminPosts';
 import AdminNewPost from './pages/admin/AdminNewPost';
@@ -43,6 +45,7 @@ export const router = createBrowserRouter([
       { path: 'contact', element: <Contact /> },
       { path: 'privacy', element: <Privacy /> },
       { path: 'category/:categoryId', element: <CategoryPage /> },
+      { path: 'calculator', element: <CalculatorPage /> },
       { path: 'post/:slug', element: <PostRedirect /> },
       { path: 'en', element: <EnHome /> },
       { path: 'en/flow-map', element: <EnFlowMap /> },
@@ -50,6 +53,7 @@ export const router = createBrowserRouter([
       { path: 'en/contact', element: <EnContact /> },
       { path: 'en/privacy', element: <EnPrivacy /> },
       { path: 'en/category/:categoryId', element: <EnCategoryPage /> },
+      { path: 'en/calculator', element: <EnCalculatorPage /> },
       { path: 'en/post/:slug', element: <PostRedirect lang="en" /> },
       { path: 'en/:slug', element: <EnFlowStep /> },
       { path: ':slug', element: <FlowStep /> },
